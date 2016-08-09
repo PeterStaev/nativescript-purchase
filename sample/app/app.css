@@ -1,0 +1,11 @@
+#dd
+{
+    padding: 5;
+    background-color: red;
+    color: yellow;
+    font-size: 25;
+    font-weight: bold;
+    font-style: italic;
+    text-align: center;
+    opacity: 0.5;
+}
