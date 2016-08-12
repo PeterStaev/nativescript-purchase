@@ -4,7 +4,6 @@ import * as pages from "ui/page";
 import * as purchase from "nativescript-purchase";
 import { Transaction } from "nativescript-purchase/transaction";
 import { Product } from "nativescript-purchase/product";
-import * as applicationSettings from "application-settings";
 import { ItemEventData } from "ui/list-view";
 
 var viewModel: observable.Observable;
@@ -17,7 +16,6 @@ export function pageLoaded(args: observable.EventData) {
 
     purchase.on(purchase.transactionUpdatedEvent, (transaction: Transaction) => {
         console.dump(transaction);
-        applicationSettings.setBoolean()
     });
 
     purchase.getProducts()
