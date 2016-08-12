@@ -51,9 +51,11 @@
         },
         copy: {
             declarations: {
-                src: localConfig.typeScriptDeclarations,
-                dest: localConfig.outDir
+                files: [{ expand: true, src: localConfig.typeScriptDeclarations, dest: localConfig.outDir }]
             },
+            subPackageConfig: {
+                files: [{ expand: true, src: ["*/package.json", "!sample/**"], dest: localConfig.outDir }]
+            }, 
             packageConfig: {
                 src: "package.json",
                 dest: localConfig.outDir,

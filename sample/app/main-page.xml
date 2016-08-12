@@ -1,7 +1,17 @@
-<Page xmlns="http://schemas.nativescript.org/tns.xsd" loaded="pageLoaded" xmlns:dd="nativescript-drop-down">
-  <GridLayout rows="auto, auto, *" columns="auto, *">
-    <dd:DropDown id="dd" hint="{{ hint }}" items="{{ items }}" selectedIndex="{{ selectedIndex }}" row="0" colSpan="2" />
-    <Label text="Selected Index:" row="1" col="0" fontSize="18" verticalAlignment="bottom"/>
-    <TextField text="{{ selectedIndex }}" row="1" col="1" />
-  </GridLayout>
+<Page xmlns="http://schemas.nativescript.org/tns.xsd" loaded="pageLoaded">
+    <ActionBar title="In-App Purchase Demo">
+        <ActionBar.items>
+            <ActionItem ios.position="right" text="Restore" tap="onRestoreTap"/>
+        </ActionBar.items>
+    </ActionBar>
+    
+    <ListView items="{{ items }}" itemTap="onProductTap">
+        <ListView.itemTemplate>
+            <GridLayout rows="auto, auto" columns="*, auto" padding="5">
+                <Label row="0" col="0" text="{{ localizedTitle }}"/>
+                <Label row="1" col="0" text="{{ localizedDescription }}" textWrap="true" color="#999999"/>
+                <Label text="{{ priceFormatted }}" row="0" rowSpan="2" col="1" style="font-size: 20" />
+            </GridLayout>
+        </ListView.itemTemplate>
+    </ListView>
 </Page>

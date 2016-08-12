@@ -11,3 +11,70 @@ Run the following command from the root of your project:
 `tns plugin add nativescript-purchase`
 
 This command automatically installs the necessary files, as well as stores nativescript-purchase as a dependency in your project's package.json file.
+
+In order to get intellisense and make TypeScript compile without problems, add the following to your `references.d.ts`:
+```typescript
+/// <reference path="./node_modules/nativescript-purchase/nativescript-purchase.d.ts" />
+```
+
+## Usage
+
+First we need to initialize the plugin with a list for product identifier that will be availabel for purchase. This is best to be done before application start. 
+```typescript
+import *  as purchase from "nativescript-purchase";
+purchase.init(["com.sample.purchase.coolproduct1", "com.sample.purchase.coolproduct2"]);
+```
+
+To get the actual products with details (like title, price, currency, etc.) you should use:
+```typescript
+import { Product } from "nativescript-purchase/product";
+
+purchase.getProducts().then((products: Array<Product>) => {
+    products.forEach((product: Product) => {
+        console.log(products.productIdentifier);
+        console.log(products.localizedTitle);
+        console.log(products.priceFormatted);
+    });
+});
+```
+
+Before proceeding with buying items you should hook up to the `transactionUpdated` event first. This way you will receive information about the transaction state while it is executing and take necessary action when the transaction completes:
+```typescript
+import { Transaction, TransactionState } from "nativescript-purchase/transaction";
+import * as applicationSettings from "application-settings";
+
+purchase.on(purchase.transactionUpdatedEvent, (transaction: Transaction) => {
+    if (transaction.transactionState === TransactionState.Purchased) {
+        alert(`Congratulations you just bought ${transaction.productIdentifier}!`);
+        console.log(transaction.transactionDate);
+        console.log(transaction.transactionIdentifier);
+        applicationSettings.setBoolean(transaction.productIdentifier, true);
+    }
+    else if (transaction.transactionState === Transaction.Restored) {
+        console.log(`Purchase of ${transaction.productIdentifier} restored.`);
+        console.log(transaction.transactionDate);
+        console.log(transaction.transactionIdentifier);
+        console.log(transaction.originalTransaction.transactionDate);
+        applicationSettings.setBoolean(transaction.productIdentifier, true);
+    }
+    else if (transaction.transactionState === Transaction.Failed) {
+        alert(`Purchase of ${transaction.productIdentifier} failed!`);
+    }    
+});
+```
+
+Now lets buy a product!
+```typescript
+if (purchase.canMakePayments()) {
+    // NOTE: 'product' must be the same instance as the one returned from getProducts()
+    purchase.buyProduct(product);
+}
+else {
+    alert("Sorry, your account is not eligible to make payments!");
+}
+```
+
+And to restore previous purchases to the user's device:
+```typescript
+purchase.restorePurchases();
+```

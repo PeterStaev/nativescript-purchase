@@ -5,8 +5,7 @@
   "main": "purchase.js",
   "nativescript": {
     "platforms": {
-      "ios": "1.5.0",
-      "android": "1.5.0"
+      "ios": "1.5.0"
     }
   },
 
@@ -20,6 +19,7 @@
     "iap",
     "in-app purchase",
     "in-app billing",
+    "vending",
     "payment",
     "subscription",
     "tangra"

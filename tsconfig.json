@@ -2,8 +2,8 @@
     "compilerOptions": {
         "noEmitOnError": true,
         "noEmitHelpers": true,
-        "noLib": false,
         "sourceMap": false,
+        "declaration": false,
         "target": "es5",
         "module": "commonjs",
         "outDir": "bin/dist",

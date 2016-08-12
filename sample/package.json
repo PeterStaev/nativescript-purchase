@@ -1,20 +1,20 @@
 {
 	"nativescript": {
-		"id": "net.tangrainc.dropdownsample",
-		"tns-ios": {
-			"version": "2.0.1"
-		},
+		"id": "com.tangrainc.purchasesample",
 		"tns-android": {
+			"version": "2.1.1"
+		},
+		"tns-ios": {
 			"version": "2.1.1"
 		}
 	},
 	"scripts": {
-		"android": "npm uninstall nativescript-drop-down && tns deploy android",
-		"ios": "npm uninstall nativescript-drop-down && tns deploy ios"
+		"android": "npm uninstall nativescript-purchase && tns deploy android",
+		"ios": "npm uninstall nativescript-purchase && tns deploy ios"
 	},
 	"dependencies": {
 		"tns-core-modules": "2.1.0",
-		"nativescript-drop-down": "file:../bin/dist"
+		"nativescript-purchase": "file:../bin/dist"
 	},
 	"devDependencies": {
 		"babel-traverse": "6.10.4",
