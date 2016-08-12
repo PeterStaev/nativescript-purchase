@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ***************************************************************************** */
 
-/// <reference path="./product/product.d.ts" />
-/// <reference path="./transaction/transaction.d.ts" />
 declare module "nativescript-purchase" { 
     import { Product } from "nativescript-purchase/product";
     import { Transaction } from "nativescript-purchase/transaction";
