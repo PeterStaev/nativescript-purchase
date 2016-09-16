@@ -6,7 +6,13 @@ android:
   - platform-tools
   - tools
   - build-tools-22.0.1
-  - android-24
+  - android-22
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+cache:
+  directories:
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"  
 before_script:
     - nvm install 4.2.3
     - nvm user 4.2.3
