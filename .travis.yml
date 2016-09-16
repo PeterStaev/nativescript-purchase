@@ -1,7 +1,15 @@
-language: node_js
-node_js:
-    4.2.3
+language: android
+jdk:
+  - oraclejdk8
+android:
+  components:
+  - platform-tools
+  - tools
+  - build-tools-22.0.1
+  - android-24
 before_script:
+    - nvm install 4.2.3
+    - nvm user 4.2.3
     - npm install -g grunt-cli
     - npm install
 script:
