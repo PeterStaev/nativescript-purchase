@@ -25,7 +25,9 @@ export class Transaction implements definition.Transaction {
     public transactionDate: Date;
     public transactionReceipt: string;
     public originalTransaction: Transaction;
-
+    public developerPayload: string; /* Android Only */
+    public dataSignature: string; /* Android Only */
+    
     constructor(nativeValue: any) {
         this.nativeValue = nativeValue;
     }
@@ -37,4 +39,5 @@ export class TransactionState implements definition.TransactionState {
     public static Failed = "failed";
     public static Deferred = "deferred";
     public static Purchasing = "purchasing";
+    public static Refunded = "refunded";
 }

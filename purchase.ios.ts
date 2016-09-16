@@ -52,6 +52,12 @@ export function buyProduct(product: Product) {
     SKPaymentQueue.defaultQueue().addPayment(payment);
 }
 
+export function consumePurchase(token: string): Promise<number> {
+    return new Promise<number>((resolve, reject) => {
+        resolve(0);
+    });
+}
+
 export function restorePurchases() {
     SKPaymentQueue.defaultQueue().restoreCompletedTransactions();
 }

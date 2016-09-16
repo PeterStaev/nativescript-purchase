@@ -2,7 +2,7 @@ import * as observable from "data/observable";
 import * as observableArray from "data/observable-array";
 import * as pages from "ui/page";
 import * as purchase from "nativescript-purchase";
-import { Transaction } from "nativescript-purchase/transaction";
+import { Transaction, TransactionState } from "nativescript-purchase/transaction";
 import { Product } from "nativescript-purchase/product";
 import { ItemEventData } from "ui/list-view";
 
@@ -16,6 +16,13 @@ export function pageLoaded(args: observable.EventData) {
 
     purchase.on(purchase.transactionUpdatedEvent, (transaction: Transaction) => {
         console.dump(transaction);
+        console.log(transaction.transactionState);
+        if (transaction.transactionState === TransactionState.Restored) {
+            console.log(transaction.originalTransaction.transactionDate);
+        }
+        if (transaction.transactionState === TransactionState.Purchased) {
+            // purchase.consumePurchase(transaction.transactionReceipt).then((error) => console.log(error), (e) => console.log(e));
+        }    
     });
 
     purchase.getProducts()
@@ -32,5 +39,6 @@ export function onProductTap(data: ItemEventData) {
 }
 
 export function onRestoreTap() {
+    console.log("Restoring");
     purchase.restorePurchases();
 }

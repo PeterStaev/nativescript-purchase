@@ -24,6 +24,8 @@ declare module "nativescript-purchase/transaction" {
         public transactionDate: Date;
         public transactionReceipt: string;
         public originalTransaction: Transaction;
+        public developerPayload: string; /* Android Only */
+        public dataSignature: string; /* Android Only */
 
         constructor(nativeValue: any);
     }
@@ -34,5 +36,6 @@ declare module "nativescript-purchase/transaction" {
         public static Failed: string;
         public static Deferred: string;
         public static Purchasing: string;
+        public static Refunded: string;
     }
 }

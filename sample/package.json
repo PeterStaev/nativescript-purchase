@@ -1,16 +1,17 @@
 {
 	"nativescript": {
 		"id": "com.tangrainc.purchasesample",
-		"tns-android": {
+		"tns-ios": {
 			"version": "2.1.1"
 		},
-		"tns-ios": {
+		"tns-android": {
 			"version": "2.1.1"
 		}
 	},
 	"scripts": {
 		"android": "npm uninstall nativescript-purchase && tns deploy android",
-		"ios": "npm uninstall nativescript-purchase && tns deploy ios"
+		"ios": "npm uninstall nativescript-purchase && tns deploy ios",
+		"android-release": "tns build android --release --key-store-path ~/Documents/TangraInc.keystore --key-store-password P@ssw0rd --key-store-alias \"tangra inc.\" --key-store-alias-password P@ssw0rd"
 	},
 	"dependencies": {
 		"tns-core-modules": "2.1.0",

@@ -9,6 +9,7 @@
         typeScriptDeclarations: [
             "**/*.d.ts",
             "!references.d.ts",
+            "!typings/*.*",
             "!node_modules/**/*.*",
             "!sample/**/*.*",
             "!bin/**/*.*"
@@ -43,7 +44,7 @@
         {
             build:
             {
-                src: localConfig.typeScriptSrc,
+                src: localConfig.typeScriptSrc.concat(["!typings/*.*"]),
                 options: {
                     configuration: grunt.file.readJSON("./tslint.json")
                 }
@@ -56,6 +57,9 @@
             subPackageConfig: {
                 files: [{ expand: true, src: ["*/package.json", "!sample/**"], dest: localConfig.outDir }]
             }, 
+            platforms: {
+                files: [{ expand: true, src: ["platforms/**"], dest: localConfig.outDir }]
+            },
             packageConfig: {
                 src: "package.json",
                 dest: localConfig.outDir,
@@ -75,12 +79,20 @@
                         return content.substring(content.indexOf("\n") + 1)
                     }
                 }
+            },
+            android_aar: {
+                src: "android/inappbilling/inappbillinghelper/build/outputs/aar/inappbillinghelper-release.aar",
+                dest: localConfig.outDir + "platforms/android/inappbillinghelper-release.aar"
             }
         },
         exec: {
             npm_publish: {
                 cmd: "npm publish",
                 cwd: localConfig.outDir
+            }, 
+            build_android_aar: {
+                cmd: "./gradlew build",
+                cwd: "android/inappbilling/"
             }
         }
     });
@@ -95,6 +107,7 @@
         "tslint:build",
         "clean:build",
         "ts:build",
+        "exec:build_android_aar",
         "copy"
     ]);
     grunt.registerTask("publish", [

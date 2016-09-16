@@ -1,0 +1,10 @@
+android {
+  productFlavors {
+    "nativescript-purchase" {
+      dimension "nativescript-purchase"
+    }
+  }
+}
+dependencies {
+    compile "com.google.guava:guava:18.0"
+}

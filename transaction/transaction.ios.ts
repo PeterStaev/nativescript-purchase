@@ -39,7 +39,6 @@ export class Transaction extends common.Transaction {
                 this.transactionState = common.TransactionState.Purchasing;
                 break;
                 
-                
             case SKPaymentTransactionState.SKPaymentTransactionStateRestored:
                 this.transactionState = common.TransactionState.Restored;
                 this.originalTransaction = new Transaction(nativeValue.originalTransaction);
