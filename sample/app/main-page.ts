@@ -16,12 +16,14 @@ export function pageLoaded(args: observable.EventData) {
 
     purchase.on(purchase.transactionUpdatedEvent, (transaction: Transaction) => {
         console.dump(transaction);
-        console.log(transaction.transactionState);
+        
         if (transaction.transactionState === TransactionState.Restored) {
             console.log(transaction.originalTransaction.transactionDate);
         }
-        if (transaction.transactionState === TransactionState.Purchased) {
-            // purchase.consumePurchase(transaction.transactionReceipt).then((error) => console.log(error), (e) => console.log(e));
+        if (transaction.transactionState === TransactionState.Purchased && transaction.productIdentifier.indexOf(".consume") >= 0) {
+            purchase.consumePurchase(transaction.transactionReceipt)
+                .then((responseCode) => console.log(responseCode))
+                .catch((e) => console.log(e));
         }    
     });
 
@@ -39,6 +41,5 @@ export function onProductTap(data: ItemEventData) {
 }
 
 export function onRestoreTap() {
-    console.log("Restoring");
     purchase.restorePurchases();
 }

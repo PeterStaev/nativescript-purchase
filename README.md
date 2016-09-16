@@ -1,6 +1,7 @@
 # NativeScript In-App Purchases plugin
 [![Build Status](https://travis-ci.org/PeterStaev/nativescript-purchase.svg?branch=master)](https://travis-ci.org/PeterStaev/nativescript-purchase)
 [![npm downloads](https://img.shields.io/npm/dm/nativescript-purchase.svg)](https://www.npmjs.com/package/nativescript-purchase)
+[![npm downloads](https://img.shields.io/npm/dt/nativescript-purchase.svg)](https://www.npmjs.com/package/nativescript-purchase)
 [![npm](https://img.shields.io/npm/v/nativescript-purchase.svg)](https://www.npmjs.com/package/nativescript-purchase)
 
 A NativeScript plugin for making in-app purchases.
@@ -73,6 +74,20 @@ else {
     alert("Sorry, your account is not eligible to make payments!");
 }
 ```
+
+NOTE: Because of the difference between iOS and Android in terms of consuming purchases - for iOS this is defined
+in the product you add in iTunes Connect and it is consumed automatically, where for Android it has to be done manually - 
+if you will be supporting Android you will have to manually consume the purchase by calling the `consumePurchase` method. 
+The methods takes a single parameter that is the receipt from the transaction:
+```typescript
+purchase.on(purchase.transactionUpdatedEvent, (transaction: Transaction) => {
+    if (transaction.transactionState === TransactionState.Purchased && transaction.productIdentifier.indexOf(".consume") >= 0) {
+        purchase.consumePurchase(transaction.transactionReceipt)
+            .then((responseCode) => console.log(responseCode)) // If responseCode === 0 the purchase has been successfully consumed
+            .catch((e) => console.log(e));
+    }    
+});
+``` 
 
 And to restore previous purchases to the user's device:
 ```typescript
