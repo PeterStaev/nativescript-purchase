@@ -5,7 +5,7 @@ android:
   components:
   - platform-tools
   - tools
-  - build-tools-22.0.3
+  - build-tools-23.0.3
   - android-22
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
