@@ -15,7 +15,7 @@ cache:
   - "$HOME/.gradle/wrapper/"  
 before_script:
     - nvm install 4.2.3
-    - nvm user 4.2.3
+    - nvm use 4.2.3
     - npm install -g grunt-cli
     - npm install
 script:
