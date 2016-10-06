@@ -32,9 +32,9 @@ import { Product } from "nativescript-purchase/product";
 
 purchase.getProducts().then((products: Array<Product>) => {
     products.forEach((product: Product) => {
-        console.log(products.productIdentifier);
-        console.log(products.localizedTitle);
-        console.log(products.priceFormatted);
+        console.log(product.productIdentifier);
+        console.log(product.localizedTitle);
+        console.log(product.priceFormatted);
     });
 });
 ```
