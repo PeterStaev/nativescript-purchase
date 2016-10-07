@@ -51,14 +51,14 @@ purchase.on(purchase.transactionUpdatedEvent, (transaction: Transaction) => {
         console.log(transaction.transactionIdentifier);
         applicationSettings.setBoolean(transaction.productIdentifier, true);
     }
-    else if (transaction.transactionState === Transaction.Restored) {
+    else if (transaction.transactionState === TransactionState.Restored) {
         console.log(`Purchase of ${transaction.productIdentifier} restored.`);
         console.log(transaction.transactionDate);
         console.log(transaction.transactionIdentifier);
         console.log(transaction.originalTransaction.transactionDate);
         applicationSettings.setBoolean(transaction.productIdentifier, true);
     }
-    else if (transaction.transactionState === Transaction.Failed) {
+    else if (transaction.transactionState === TransactionState.Failed) {
         alert(`Purchase of ${transaction.productIdentifier} failed!`);
     }    
 });
