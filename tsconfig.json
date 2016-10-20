@@ -4,6 +4,7 @@
         "noEmitHelpers": true,
         "sourceMap": false,
         "declaration": false,
+        "noImplicitUseStrict": true,
         "target": "es5",
         "module": "commonjs",
         "outDir": "bin/dist",
