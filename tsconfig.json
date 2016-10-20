@@ -3,11 +3,12 @@
         "noEmitOnError": true,
         "noEmitHelpers": true,
         "sourceMap": false,
+        "removeComments": true,
         "declaration": false,
+        "experimentalDecorators": true,
         "target": "es5",
         "module": "commonjs",
-        "outDir": "bin/dist",
-        "rootDir": "./"
+        "outDir": "bin/dist"
     }, 
     "exclude": [
         "node_modules", 
