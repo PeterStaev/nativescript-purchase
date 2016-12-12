@@ -2,7 +2,7 @@
   "name": "nativescript-purchase",
   "version": "1.0.1",
   "description": "A NativeScript plugin for making in-app purchases",
-  "main": "purchase.js",
+  "main": "purchase",
   "nativescript": {
     "platforms": {
       "ios": "1.7.0",
