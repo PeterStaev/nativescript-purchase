@@ -21,12 +21,12 @@ import * as common from "./purchase-common";
 global.moduleMerge(common, exports);
 
 let productRequest: SKProductsRequest;
-let productIds: NSMutableSet;
+let productIds: NSMutableSet<string>;
 let productRequestDelegate: SKProductRequestDelegateImpl;
 let paymentTransactionObserver: SKPaymentTransactionObserverImpl;
 
 export function init(productIdentifiers: Array<string>) {
-    productIds = new NSMutableSet();
+    productIds = NSMutableSet.alloc<string>().init();
     paymentTransactionObserver = new SKPaymentTransactionObserverImpl();
     
     productIdentifiers.forEach((value) => productIds.addObject(value));
@@ -92,7 +92,7 @@ class SKProductRequestDelegateImpl extends NSObject implements SKProductsRequest
         this._cleanup();
     }
     
-    public requestDidFailWithError(error: NSError) {
+    public requestDidFailWithError(request: SKRequest, error: NSError) {
         this._reject(new Error(error.localizedDescription));
         this._cleanup();
     }
@@ -106,16 +106,16 @@ class SKProductRequestDelegateImpl extends NSObject implements SKProductsRequest
 class SKPaymentTransactionObserverImpl extends NSObject implements SKPaymentTransactionObserver {
     public static ObjCProtocols = [SKPaymentTransactionObserver];
 
-    public paymentQueueUpdatedTransactions(queue: SKPaymentQueue, transactions: NSArray) {
+    public paymentQueueUpdatedTransactions(queue: SKPaymentQueue, transactions: NSArray<SKPaymentTransaction>) {
         for (let loop = 0; loop < transactions.count; loop++) {
-            let transaction = transactions.objectAtIndex(loop) as SKPaymentTransaction;
+            let transaction = transactions.objectAtIndex(loop);
             let resultTransaction = new Transaction(transaction);
 
             common._notify(common.transactionUpdatedEvent, resultTransaction);
 
-            if (transaction.transactionState === SKPaymentTransactionState.SKPaymentTransactionStateFailed
-                || transaction.transactionState === SKPaymentTransactionState.SKPaymentTransactionStatePurchased
-                || transaction.transactionState === SKPaymentTransactionState.SKPaymentTransactionStateRestored) {
+            if (transaction.transactionState === SKPaymentTransactionState.Failed
+                || transaction.transactionState === SKPaymentTransactionState.Purchased
+                || transaction.transactionState === SKPaymentTransactionState.Restored) {
                 SKPaymentQueue.defaultQueue().finishTransaction(transaction);
             }           
         }

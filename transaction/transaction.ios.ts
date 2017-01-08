@@ -23,23 +23,23 @@ export class Transaction extends common.Transaction {
         super(nativeValue);
         
         switch (nativeValue.transactionState) {
-            case SKPaymentTransactionState.SKPaymentTransactionStateDeferred:
+            case SKPaymentTransactionState.Deferred:
                 this.transactionState = common.TransactionState.Deferred;
                 break;
 
-            case SKPaymentTransactionState.SKPaymentTransactionStateFailed:
+            case SKPaymentTransactionState.Failed:
                 this.transactionState = common.TransactionState.Failed;
                 break;
                 
-            case SKPaymentTransactionState.SKPaymentTransactionStatePurchased:
+            case SKPaymentTransactionState.Purchased:
                 this.transactionState = common.TransactionState.Purchased;
                 break;
                 
-            case SKPaymentTransactionState.SKPaymentTransactionStatePurchasing:
+            case SKPaymentTransactionState.Purchasing:
                 this.transactionState = common.TransactionState.Purchasing;
                 break;
                 
-            case SKPaymentTransactionState.SKPaymentTransactionStateRestored:
+            case SKPaymentTransactionState.Restored:
                 this.transactionState = common.TransactionState.Restored;
                 this.originalTransaction = new Transaction(nativeValue.originalTransaction);
                 break;
@@ -51,7 +51,7 @@ export class Transaction extends common.Transaction {
             this.transactionDate = nativeValue.transactionDate as any; // NSDate will automatically be bridged to date
         }    
         if (nativeValue.transactionReceipt) {
-            this.transactionReceipt = nativeValue.transactionReceipt.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.NSDataBase64Encoding64CharacterLineLength);
+            this.transactionReceipt = nativeValue.transactionReceipt.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength);
         }    
     }
 } 

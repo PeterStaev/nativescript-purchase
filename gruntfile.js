@@ -25,8 +25,6 @@
         },
         ts: {
             build: {
-                src: localConfig.typeScriptSrc,
-                outDir: localConfig.outDir,
                 tsconfig: true
             }
         },

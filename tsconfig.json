@@ -2,17 +2,18 @@
     "compilerOptions": {
         "noEmitOnError": true,
         "noEmitHelpers": true,
-        "sourceMap": false,
-        "removeComments": true,
-        "declaration": false,
+        "noUnusedLocals": true,
         "experimentalDecorators": true,
+        "noLib": false,
+        "sourceMap": false,
         "target": "es5",
         "module": "commonjs",
-        "outDir": "bin/dist"
+        "outDir": "bin/dist",
+        "rootDir": "./"
     }, 
     "exclude": [
-        "node_modules", 
-        "sample", 
-        "bin"
+        "node_modules/**/*.*", 
+        "sample/**/*.*", 
+        "bin/**/*.*"
     ]
 }

@@ -20,15 +20,15 @@ export class Product extends common.Product {
     constructor(nativeValue: SKProduct) {
         super(nativeValue);
         
-        let formatter = new NSNumberFormatter();
-        formatter.numberStyle = NSNumberFormatterStyle.NSNumberFormatterCurrencyStyle;
+        let formatter = NSNumberFormatter.alloc().init();
+        formatter.numberStyle = NSNumberFormatterStyle.CurrencyStyle;
         formatter.locale = nativeValue.priceLocale;
 
         this.productIdentifier = nativeValue.productIdentifier;
         this.localizedDescription = nativeValue.localizedDescription;
         this.localizedTitle = nativeValue.localizedTitle;
         this.priceAmount = nativeValue.price.doubleValue;
-        this.priceFormatted = formatter.stringFromNumber(nativeValue.price);
+        this.priceFormatted = formatter.stringFromNumber(nativeValue.price as any);
         this.priceCurrencyCode = nativeValue.priceLocale.objectForKey(NSLocaleCurrencyCode);
     }
 }

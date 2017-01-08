@@ -2,10 +2,10 @@
 	"nativescript": {
 		"id": "com.tangrainc.purchasesample",
 		"tns-ios": {
-			"version": "2.1.1"
+			"version": "2.4.0"
 		},
 		"tns-android": {
-			"version": "2.1.1"
+			"version": "2.4.1"
 		}
 	},
 	"scripts": {
@@ -14,7 +14,7 @@
 		"android-release": "tns build android --release --key-store-path ~/Documents/TangraInc.keystore --key-store-password P@ssw0rd --key-store-alias \"tangra inc.\" --key-store-alias-password P@ssw0rd"
 	},
 	"dependencies": {
-		"tns-core-modules": "2.1.0",
+		"tns-core-modules": "2.4.2",
 		"nativescript-purchase": "file:../bin/dist"
 	},
 	"devDependencies": {
@@ -23,7 +23,7 @@
 		"babylon": "6.8.2",
 		"filewalker": "0.1.3",
 		"lazy": "1.0.11",
-		"nativescript-dev-typescript": "^0.3.1",
-		"typescript": "^1.8.10"
+		"nativescript-dev-typescript": "0.3.5",
+		"typescript": "2.1.4"
 	}
 }
