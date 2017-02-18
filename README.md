@@ -93,3 +93,8 @@ And to restore previous purchases to the user's device:
 ```typescript
 purchase.restorePurchases();
 ```
+
+## In-depth Tutorial
+1. [Adding the plugin to your application and creating a purchase workflow](https://www.tangrainc.com/blog/2017/02/implementing-app-purchases-nativescript-application-part-1/)
+2. Configuring iTunes Connect and making purchases on iOS *(COMING SOON!)*
+3. Configuring Google Play Store and making purchases on Android *(COMING SOON!)*
