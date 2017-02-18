@@ -52,5 +52,6 @@ obj
 !gruntfile.js
 node_modules
 *.tmp.*
-sample/platforms
+demo/platforms
+demo/lib
 !karma.conf.js

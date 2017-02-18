@@ -3,7 +3,7 @@
         typeScriptSrc: [
             "**/*.ts",
             "!node_modules/**/*.*",
-            "!sample/**/*.*",
+            "!demo/**/*.*",
             "!bin/**/*.*"
         ],
         typeScriptDeclarations: [
@@ -11,7 +11,7 @@
             "!references.d.ts",
             "!typings/*.*",
             "!node_modules/**/*.*",
-            "!sample/**/*.*",
+            "!demo/**/*.*",
             "!bin/**/*.*"
         ],
         outDir: "bin/dist/"
@@ -43,7 +43,7 @@
                 files: [{ expand: true, src: localConfig.typeScriptDeclarations, dest: localConfig.outDir }]
             },
             subPackageConfig: {
-                files: [{ expand: true, src: ["*/package.json", "!sample/**"], dest: localConfig.outDir }]
+                files: [{ expand: true, src: ["*/package.json", "!demo/**"], dest: localConfig.outDir }]
             }, 
             platforms: {
                 files: [{ expand: true, src: ["platforms/**"], dest: localConfig.outDir }]
