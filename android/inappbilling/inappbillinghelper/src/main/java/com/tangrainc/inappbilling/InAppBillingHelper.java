@@ -71,7 +71,7 @@ public class InAppBillingHelper {
         _context.bindService(serviceIntent, _serviceConn, Context.BIND_AUTO_CREATE);
     }
 
-    public ListenableFuture<JSONObject[]> getProducts() {
+    public ListenableFuture<JSONObject[]> getProducts(final boolean subs) {
         return _executor.submit(new Callable<JSONObject[]>() {
             @Override
             public JSONObject[] call() throws Exception {
@@ -84,11 +84,11 @@ public class InAppBillingHelper {
                 if (_service == null) {
                     throw new Exception("Billing service could not be connected for 10 secs! May be running on an emulator w/o Google Service?");
                 }
-
+                String productType = subs ? "subs" : "inapp";
                 Bundle queryProducts = new Bundle();
                 queryProducts.putStringArrayList("ITEM_ID_LIST", new ArrayList< >(Arrays.asList(_productIdentifiers)));
 
-                Bundle productDetails = _service.getSkuDetails(3, _context.getPackageName(), "inapp", queryProducts);
+                Bundle productDetails = _service.getSkuDetails(3, _context.getPackageName(), productType, queryProducts);
                 ArrayList<JSONObject> result = new ArrayList< >();
 
                 int response = productDetails.getInt("RESPONSE_CODE");
@@ -108,8 +108,9 @@ public class InAppBillingHelper {
         });
     }
 
-    public void startBuyIntent(Activity foregroundActivity, String productIdentifier, String payload) throws Exception {
-        Bundle buyIntentBundle = _service.getBuyIntent(3, _context.getPackageName(), productIdentifier, "inapp", payload);
+    public void startBuyIntent(Activity foregroundActivity, String productIdentifier, String payload, boolean subs) throws Exception {
+        String productType = subs ? "subs" : "inapp";
+        Bundle buyIntentBundle = _service.getBuyIntent(3, _context.getPackageName(), productIdentifier, productType, payload);
         PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
 
         if (pendingIntent == null) {
@@ -139,17 +140,18 @@ public class InAppBillingHelper {
     }
 
     public ListenableFuture<JSONObject[]> getPurchases() {
-        return this.getPurchases(null);
+        return this.getPurchases(null, false);
     }
 
-    public ListenableFuture<JSONObject[]> getPurchases(final String continuationToken) {
+    public ListenableFuture<JSONObject[]> getPurchases(final String continuationToken, final boolean subs) {
+        final String productType = subs ? "subs" : "inapp";
         return _executor.submit(new Callable<JSONObject[]>() {
             @Override
             public JSONObject[] call() throws Exception {
                 Log.d(TAG, "Getting Purchases...");
 
                 ArrayList<JSONObject> result = new ArrayList< >();
-                Bundle ownedItems = _service.getPurchases(3, _context.getPackageName(), "inapp", continuationToken);
+                Bundle ownedItems = _service.getPurchases(3, _context.getPackageName(), productType, continuationToken);
                 int response = ownedItems.getInt("RESPONSE_CODE");
 
                 if (response == 0) {
@@ -167,7 +169,7 @@ public class InAppBillingHelper {
                     }
 
                     if (newContinuationToken != null) {
-                        result.addAll(Arrays.asList(getPurchases(newContinuationToken).get()));
+                        result.addAll(Arrays.asList(getPurchases(newContinuationToken, subs).get()));
                     }
                 }
                 else {
