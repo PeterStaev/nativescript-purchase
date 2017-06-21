@@ -108,8 +108,8 @@ public class InAppBillingHelper {
         });
     }
 
-    public void startBuyIntent(Activity foregroundActivity, String productIdentifier, String payload, boolean subs) throws Exception {
-        String productType = subs ? "subs" : "inapp";
+    public void startBuyIntent(Activity foregroundActivity, String productIdentifier, String payload) throws Exception {
+        String productType = "subs";
         Bundle buyIntentBundle = _service.getBuyIntent(3, _context.getPackageName(), productIdentifier, productType, payload);
         PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
 
