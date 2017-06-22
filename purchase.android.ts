@@ -26,14 +26,13 @@ let helper: com.tangrainc.inappbilling.InAppBillingHelper;
 let currentBuyPayload: string;
 let currentBuyProductIdentifier: string;
 
-export function init(productIdentifiers: Array<string>) {
+export function init(productIdentifiers: Array<string>, subs: boolean) {
     let nativeArray = Array.create(java.lang.String, productIdentifiers.length);
     for (let loop = 0; loop < productIdentifiers.length; loop++) {
         nativeArray[loop] = productIdentifiers[loop].toLowerCase(); // Android product IDs are all lower case
     }
-
     ensureApplicationContext().then(() => {
-        helper = new com.tangrainc.inappbilling.InAppBillingHelper(application.android.context, nativeArray);
+        helper = new com.tangrainc.inappbilling.InAppBillingHelper(application.android.context, nativeArray, subs);
     });
 
     application.android.on(application.AndroidApplication.activityResultEvent, (args: application.AndroidActivityResultEventData) => {

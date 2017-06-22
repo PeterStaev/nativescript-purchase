@@ -20,13 +20,14 @@ In order to get intellisense and make TypeScript compile without problems, add t
 
 ## Usage
 
-First we need to initialize the plugin with a list for product identifier that will be availabel for purchase. This is best to be done before application start. 
+First we need to initialize the plugin with a list for product identifier that will be available for purchase. This is best to be done before application start. 
 ```typescript
 import *  as purchase from "nativescript-purchase";
-purchase.init(["com.sample.purchase.coolproduct1", "com.sample.purchase.coolproduct2"]);
+purchase.init(["com.sample.purchase.coolproduct1", "com.sample.purchase.coolproduct2"], false);
 ```
-
+The last boolean parameter is used to distinguish the product type between subscriptions (true) or simple products (false).
 To get the actual products with details (like title, price, currency, etc.) you should use:
+
 ```typescript
 import { Product } from "nativescript-purchase/product";
 

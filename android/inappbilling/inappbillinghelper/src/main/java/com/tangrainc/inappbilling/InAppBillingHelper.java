@@ -47,11 +47,13 @@ public class InAppBillingHelper {
     private ListeningExecutorService _executor;
     private String[] _productIdentifiers;
     private Context _context;
+    private String productType;
 
-    public InAppBillingHelper(Context context, String[] productIdentifiers) {
+    public InAppBillingHelper(Context context, String[] productIdentifiers, boolean subs) {
         _executor = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
         _productIdentifiers = productIdentifiers;
         _context = context;
+        productType = subs ? "subs" : "inapp";
         ServiceConnection _serviceConn = new ServiceConnection() {
             @Override
             public void onServiceDisconnected(ComponentName name) {
@@ -84,11 +86,10 @@ public class InAppBillingHelper {
                 if (_service == null) {
                     throw new Exception("Billing service could not be connected for 10 secs! May be running on an emulator w/o Google Service?");
                 }
-
                 Bundle queryProducts = new Bundle();
                 queryProducts.putStringArrayList("ITEM_ID_LIST", new ArrayList< >(Arrays.asList(_productIdentifiers)));
 
-                Bundle productDetails = _service.getSkuDetails(3, _context.getPackageName(), "inapp", queryProducts);
+                Bundle productDetails = _service.getSkuDetails(3, _context.getPackageName(), productType, queryProducts);
                 ArrayList<JSONObject> result = new ArrayList< >();
 
                 int response = productDetails.getInt("RESPONSE_CODE");
@@ -109,7 +110,7 @@ public class InAppBillingHelper {
     }
 
     public void startBuyIntent(Activity foregroundActivity, String productIdentifier, String payload) throws Exception {
-        Bundle buyIntentBundle = _service.getBuyIntent(3, _context.getPackageName(), productIdentifier, "inapp", payload);
+        Bundle buyIntentBundle = _service.getBuyIntent(3, _context.getPackageName(), productIdentifier, productType, payload);
         PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
 
         if (pendingIntent == null) {
@@ -149,7 +150,7 @@ public class InAppBillingHelper {
                 Log.d(TAG, "Getting Purchases...");
 
                 ArrayList<JSONObject> result = new ArrayList< >();
-                Bundle ownedItems = _service.getPurchases(3, _context.getPackageName(), "inapp", continuationToken);
+                Bundle ownedItems = _service.getPurchases(3, _context.getPackageName(), productType, continuationToken);
                 int response = ownedItems.getInt("RESPONSE_CODE");
 
                 if (response == 0) {

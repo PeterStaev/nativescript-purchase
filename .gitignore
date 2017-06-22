@@ -55,3 +55,4 @@ node_modules
 demo/platforms
 demo/lib
 !karma.conf.js
+/nbproject/private/
