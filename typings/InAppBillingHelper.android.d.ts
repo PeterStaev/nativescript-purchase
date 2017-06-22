@@ -6,7 +6,7 @@ declare namespace com {
             export class InAppBillingHelper {
                 public static BUY_INTENT_REQUEST_CODE: number;
                 
-                constructor(context: android.content.Context, productIdentifiers: Array<string>);
+                constructor(context: android.content.Context, productIdentifiers: Array<string>, subs: boolean);
                 public getProducts(): any; /* ListenableFuture<JSONObjec[]> */
                 public startBuyIntent(foregroundActivity: android.app.Activity, productIdentifier: string, payload: string);
                 public consumePurchase(token: string): any /* ListenableFuture<Integer> */

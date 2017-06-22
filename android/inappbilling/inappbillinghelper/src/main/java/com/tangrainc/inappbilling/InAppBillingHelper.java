@@ -47,11 +47,13 @@ public class InAppBillingHelper {
     private ListeningExecutorService _executor;
     private String[] _productIdentifiers;
     private Context _context;
+    private String productType;
 
-    public InAppBillingHelper(Context context, String[] productIdentifiers) {
+    public InAppBillingHelper(Context context, String[] productIdentifiers, boolean subs) {
         _executor = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
         _productIdentifiers = productIdentifiers;
         _context = context;
+        productType = subs ? "subs" : "inapp";
         ServiceConnection _serviceConn = new ServiceConnection() {
             @Override
             public void onServiceDisconnected(ComponentName name) {
@@ -71,7 +73,7 @@ public class InAppBillingHelper {
         _context.bindService(serviceIntent, _serviceConn, Context.BIND_AUTO_CREATE);
     }
 
-    public ListenableFuture<JSONObject[]> getProducts(final boolean subs) {
+    public ListenableFuture<JSONObject[]> getProducts() {
         return _executor.submit(new Callable<JSONObject[]>() {
             @Override
             public JSONObject[] call() throws Exception {
@@ -84,7 +86,6 @@ public class InAppBillingHelper {
                 if (_service == null) {
                     throw new Exception("Billing service could not be connected for 10 secs! May be running on an emulator w/o Google Service?");
                 }
-                String productType = subs ? "subs" : "inapp";
                 Bundle queryProducts = new Bundle();
                 queryProducts.putStringArrayList("ITEM_ID_LIST", new ArrayList< >(Arrays.asList(_productIdentifiers)));
 
@@ -109,7 +110,6 @@ public class InAppBillingHelper {
     }
 
     public void startBuyIntent(Activity foregroundActivity, String productIdentifier, String payload) throws Exception {
-        String productType = "subs";
         Bundle buyIntentBundle = _service.getBuyIntent(3, _context.getPackageName(), productIdentifier, productType, payload);
         PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
 
@@ -140,11 +140,10 @@ public class InAppBillingHelper {
     }
 
     public ListenableFuture<JSONObject[]> getPurchases() {
-        return this.getPurchases(null, false);
+        return this.getPurchases(null);
     }
 
-    public ListenableFuture<JSONObject[]> getPurchases(final String continuationToken, final boolean subs) {
-        final String productType = subs ? "subs" : "inapp";
+    public ListenableFuture<JSONObject[]> getPurchases(final String continuationToken) {
         return _executor.submit(new Callable<JSONObject[]>() {
             @Override
             public JSONObject[] call() throws Exception {
@@ -169,7 +168,7 @@ public class InAppBillingHelper {
                     }
 
                     if (newContinuationToken != null) {
-                        result.addAll(Arrays.asList(getPurchases(newContinuationToken, subs).get()));
+                        result.addAll(Arrays.asList(getPurchases(newContinuationToken).get()));
                     }
                 }
                 else {
