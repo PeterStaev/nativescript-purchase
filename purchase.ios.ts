@@ -25,13 +25,16 @@ let productIds: NSMutableSet<string>;
 let productRequestDelegate: SKProductRequestDelegateImpl;
 let paymentTransactionObserver: SKPaymentTransactionObserverImpl;
 
-export function init(productIdentifiers: Array<string>) {
-    productIds = NSMutableSet.alloc<string>().init();
-    paymentTransactionObserver = new SKPaymentTransactionObserverImpl();
-    
-    productIdentifiers.forEach((value) => productIds.addObject(value));
+export function init(productIdentifiers: Array<string>): Promise<any> {
+    return new Promise((resolve, reject) => {
+        productIds = NSMutableSet.alloc<string>().init();
+        paymentTransactionObserver = new SKPaymentTransactionObserverImpl();
+        
+        productIdentifiers.forEach((value) => productIds.addObject(value));
 
-    SKPaymentQueue.defaultQueue().addTransactionObserver(paymentTransactionObserver);
+        SKPaymentQueue.defaultQueue().addTransactionObserver(paymentTransactionObserver);
+        resolve();
+    });
 }
 
 export function getProducts(): Promise<Array<Product>> {

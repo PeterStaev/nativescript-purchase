@@ -26,37 +26,40 @@ let helper: com.tangrainc.inappbilling.InAppBillingHelper;
 let currentBuyPayload: string;
 let currentBuyProductIdentifier: string;
 
-export function init(productIdentifiers: Array<string>) {
-    let nativeArray = Array.create(java.lang.String, productIdentifiers.length);
-    for (let loop = 0; loop < productIdentifiers.length; loop++) {
-        nativeArray[loop] = productIdentifiers[loop].toLowerCase(); // Android product IDs are all lower case
-    }
-
-    ensureApplicationContext().then(() => {
-        helper = new com.tangrainc.inappbilling.InAppBillingHelper(application.android.context, nativeArray);
-    });
-
-    application.android.on(application.AndroidApplication.activityResultEvent, (args: application.AndroidActivityResultEventData) => {
-        if (args.requestCode === com.tangrainc.inappbilling.InAppBillingHelper.BUY_INTENT_REQUEST_CODE) {
-            let intent = args.intent as android.content.Intent;
-            let responseCode = intent.getIntExtra("RESPONSE_CODE", 0);
-            let purchaseData = intent.getStringExtra("INAPP_PURCHASE_DATA");
-            let dataSignature = intent.getStringExtra("INAPP_DATA_SIGNATURE");
-            let tran: Transaction;
-            
-            if (args.resultCode === android.app.Activity.RESULT_OK && responseCode === 0 && !types.isNullOrUndefined(purchaseData)) {
-                let nativeValue = new org.json.JSONObject(purchaseData);
-                nativeValue.put("signature", dataSignature);
-                tran = new Transaction(nativeValue);
-            }
-            else {
-                tran = new Transaction(null);
-                tran.transactionState = TransactionState.Failed;
-                tran.productIdentifier = currentBuyProductIdentifier;
-                tran.developerPayload = currentBuyPayload;
-            }
-            common._notify(common.transactionUpdatedEvent, tran);
+export function init(productIdentifiers: Array<string>): Promise<any> {
+    return new Promise((resolve, reject) => {
+        let nativeArray = Array.create(java.lang.String, productIdentifiers.length);
+        for (let loop = 0; loop < productIdentifiers.length; loop++) {
+            nativeArray[loop] = productIdentifiers[loop].toLowerCase(); // Android product IDs are all lower case
         }
+
+        ensureApplicationContext().then(() => {
+            helper = new com.tangrainc.inappbilling.InAppBillingHelper(application.android.context, nativeArray);
+            resolve();
+        });
+
+        application.android.on(application.AndroidApplication.activityResultEvent, (args: application.AndroidActivityResultEventData) => {
+            if (args.requestCode === com.tangrainc.inappbilling.InAppBillingHelper.BUY_INTENT_REQUEST_CODE) {
+                let intent = args.intent as android.content.Intent;
+                let responseCode = intent.getIntExtra("RESPONSE_CODE", 0);
+                let purchaseData = intent.getStringExtra("INAPP_PURCHASE_DATA");
+                let dataSignature = intent.getStringExtra("INAPP_DATA_SIGNATURE");
+                let tran: Transaction;
+                
+                if (args.resultCode === android.app.Activity.RESULT_OK && responseCode === 0 && !types.isNullOrUndefined(purchaseData)) {
+                    let nativeValue = new org.json.JSONObject(purchaseData);
+                    nativeValue.put("signature", dataSignature);
+                    tran = new Transaction(nativeValue);
+                }
+                else {
+                    tran = new Transaction(null);
+                    tran.transactionState = TransactionState.Failed;
+                    tran.productIdentifier = currentBuyProductIdentifier;
+                    tran.developerPayload = currentBuyPayload;
+                }
+                common._notify(common.transactionUpdatedEvent, tran);
+            }
+        });
     });
 }
 
