@@ -20,7 +20,7 @@ declare module "nativescript-purchase" {
 
     export const transactionUpdatedEvent: string;
 
-    export function init(productIdentifiers: Array<string>);
+    export function init(productIdentifiers: Array<string>): Promise<any>;
     export function getProducts(): Promise<Array<Product>>;
     export function buyProduct(product: Product, developerPayload?: string);
     export function consumePurchase(token: string): Promise<number>;
