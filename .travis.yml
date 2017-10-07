@@ -1,5 +1,8 @@
 sudo: false
 
+language: android
+jdk: oraclejdk8
+
 android:
   components:
     - tools
@@ -18,6 +21,8 @@ cache:
         - $HOME/.gradle/caches/
         - $HOME/.gradle/wrapper/
 
+before_install: nvm install 6
+
 install:
     - echo no | npm install -g nativescript
     - tns usage-reporting disable
@@ -29,18 +34,13 @@ install:
 matrix:
   include:
     - stage: lint
-      language: node_js
       os: linux
-      node_js: "6"
       script: grunt lint
 
     - stage: build
-      language: android
       os: linux
       env: 
         - Android="25"
-      jdk: oraclejdk8
-      before_install: nvm install 6.10.3
       script: "grunt ci:build:android"
 
     - stage: build
@@ -49,19 +49,13 @@ matrix:
         - iOS="10.3"
         - Xcode="8.3"
       osx_image: xcode8.3
-      language: node_js 
-      node_js: "6"
-      jdk: oraclejdk8
       script: "grunt ci:build:ios"
 
     - stage: webpack
-      language: android
       os: linux
       env:
         - Android="25"
         - Platform="Android"
-      jdk: oraclejdk8
-      before_install: nvm install 6.10.3
       script: "grunt ci:webpack:android"
     
     - stage: webpack
@@ -71,15 +65,10 @@ matrix:
         - Xcode="8.3"
         - Platform="iOS"
       osx_image: xcode8.3
-      language: node_js 
-      node_js: "6"
-      jdk: oraclejdk8
       script: "grunt ci:webpack:ios"
 
     - stage: deploy
       if: branch = release
-      language: node_js 
-      node_js: "6"
       before_deploy:
           - cd bin/dist
       deploy:
