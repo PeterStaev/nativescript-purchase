@@ -1,7 +1,6 @@
 sudo: false
 
 language: android
-jdk: oraclejdk8
 
 android:
   components:
@@ -37,10 +36,12 @@ matrix:
   include:
     - stage: lint
       os: linux
+      jdk: oraclejdk8
       script: grunt lint
 
     - stage: build
       os: linux
+      jdk: oraclejdk8
       env: 
         - Android="25"
       script: "grunt ci:build:android"
@@ -55,6 +56,7 @@ matrix:
 
     - stage: webpack
       os: linux
+      jdk: oraclejdk8
       env:
         - Android="25"
         - Platform="Android"
