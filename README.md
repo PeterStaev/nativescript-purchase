@@ -17,6 +17,94 @@ In order to get intellisense and make TypeScript compile without problems, add t
 ```typescript
 /// <reference path="./node_modules/nativescript-purchase/nativescript-purchase.d.ts" />
 ```
+## Configuration
+In order your in-app purchases to be recognized by the plugin you must configure those on the Google/iTunes side. You can check the in-depth guides at the bottom of the page to see how to do it step-by-step. 
+
+## API
+
+### Static Properties
+* **transactionUpdatedEvent** - *String*  
+String value used when hooking to `transactionUpdated` event.
+
+### Static methods
+* **init(string[]): void**  
+Initializes the plugin for work with the specified in-app purchase identifiers. 
+
+* **getProducts(): Promise<Product[]>**  
+Returns the product details *(see below)* for the in-app purchase identifiers that were used in init. 
+
+* **canMakePayments(): boolean**  
+Checks whether the current user is allowed to make in-app purchases. 
+
+* **buyProduct(Product, string?): void**  
+Buys the given product. On Android you can send custom string data that will be present in the `Transaction`.
+
+* **consumePurchase(string): Promise<number>**  
+Consumes the purchases represented by the given transaction token. If the promise returns `0` the consume was successful. Note that this is needed only for Android. For iOS each purchase is automatically consumed when it is set up as a consumabel product in iTunes. 
+
+* **restorePurchases(): void**  
+Restores previous purchased items for the current user. 
+
+### Events
+* **transactionUpdated**  
+Triggered a buy/restore transaction changes its state. You receive a `Transaction` object where you can check the status and other properties  *(see below)* of the transaction. 
+
+### `Product` properties
+* **nativeValue**  
+The native object representing the product. On iOS this will be an instance of `SKProduct` and on Android this will be a `org.json.JSONObject`
+
+* **productIdentifier** - *string*  
+The in-app product identifier as setup on iTunes Connect or Google Store.
+
+* **localizedTitle** - *string*  
+The title of the product based on the user's phone localization. 
+
+* **localizedDescription** - *string*  
+The description of the product based on the user's phone localization. 
+
+* **priceAmount** - *number*  
+The numerical value of the price for this in-app product based on the currency user's app store. 
+
+* **priceFormatted** - *string*  
+The formatted `priceAmount` with the corresponding currency symbol of the user's app store. 
+
+* **priceCurrencyCode** - *string*  
+The ISO4217 currency code of the price (for example BGN, EUR, USD, etc.)
+
+
+### `Transaction` properties
+* **nativeValue**  
+The native value representing the transaction. On iOS this will be an instance of `SKPaymentTransactio` and on Android this will be a `org.json.JSONObject`.
+
+* **transactionState** - *string*  
+The state of the transaction. Can be one of the following:
+    * Purchased
+    * Restored
+    * Failed
+    * Deferred *(iOS only)*
+    * Purchasing *(iOS only)*
+    * Refunded *(Android only)*
+
+* **productIdentifier** - *string*  
+The in-app product identifier that triggerred this transaction. 
+
+* **transactionIdentifier** - *string*  
+The unique identifier of the transaction.
+
+* **transactionDate** - *Date*  
+The date of the transaction.
+
+* **transactionReceipt** - *string*  
+The Base64 encoded transaction receipt. You can use this to do additional verification on your backend. 
+
+* **originalTransaction** - *Transaction*  
+This will be present only when restoring purchases and will contain the original transaction that purchased a given product. 
+
+* **developerPayload** - *string (Android only)*  
+Custom data sent with `buyProduct`. 
+
+* **dataSignature** - *string (Android only)*  
+The signature for the transaction.
 
 ## Usage
 
@@ -93,6 +181,17 @@ And to restore previous purchases to the user's device:
 ```typescript
 purchase.restorePurchases();
 ```
+
+## Demo
+This repository includes a plain NativeScript demo. In order to set it up run the following in your shell:
+```shell
+$ git clone https://github.com/peterstaev/nativescript-purchase
+$ cd nativescript-purchase
+$ npm install
+$ grunt compile
+$ cd demo
+```
+You will not be able to directly run the demo, becuase you need to add your purchases to the stores. Also since I already registered the application id you will have to change that in the `package.json` file located in the `demo` folder. So make sure you read and follow the in-depth tutorials below in order to get started with the demo. 
 
 ## In-depth Tutorial
 1. [Adding the plugin to your application and creating a purchase workflow](https://www.tangrainc.com/blog/2017/02/implementing-app-purchases-nativescript-application-part-1/)

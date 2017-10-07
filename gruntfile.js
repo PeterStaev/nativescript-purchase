@@ -74,32 +74,90 @@
             }
         },
         exec: {
-            npm_publish: {
-                cmd: "npm publish",
-                cwd: localConfig.outDir
-            }, 
+            tsCompile: {
+                cmd: "./node_modules/.bin/tsc --project tsconfig.json --outDir " + localConfig.outDir
+            },
+            tslint: {
+                cmd: "./node_modules/.bin/tslint --project tsconfig.json --type-check"
+            },
+            checkRequiredReadmeSection: {
+                cwd: "bin/dist",
+                cmd: function (section) {
+                    return "cat README.md | grep -q \"# " + section + "\"";
+                }
+            },
+            checkRequiredPackageJsonSection: {
+                cwd: "bin/dist",
+                cmd: function (section) {
+                    return "cat package.json | grep -q \"\\\"" + section + "\\\"\"";
+                }
+            },
+            "ci-build-demo": {
+                cmd: function (platform, demoSuffix) {
+                    return "cd demo" + (demoSuffix != "" ? "-" + demoSuffix : "") + " && npm install && tns build " + platform;
+                }
+            },
+            "ci-webpack-demo": {
+                cmd: function (platform, demoSuffix) {
+                    return "cd demo" + (demoSuffix != "" ? "-" + demoSuffix : "")+ " && npm install && npm run ns-bundle --" + platform + " --build-app --uglify --snapshot";
+                }
+            },
             build_android_aar: {
                 cmd: "./gradlew build",
                 cwd: "android/inappbilling/"
-            }
+            },
+            npm_publish: {
+                cmd: "npm publish",
+                cwd: localConfig.outDir
+            },             
         }
     });
 
-    grunt.loadNpmTasks("grunt-ts");
-    grunt.loadNpmTasks("grunt-tslint");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-exec");
-
-    grunt.registerTask("build", [
-        "tslint:build",
+  
+    grunt.registerTask("compile", [
         "clean:build",
-        "ts:build",
+        "exec:tsCompile",
         "exec:build_android_aar",
         "copy"
     ]);
+    
+    grunt.registerTask("build", [
+        "exec:tslint",
+        "compile",
+        "copy"
+    ]);
+
+    grunt.registerTask("ci", "Performs CI builds for the demo projects", function (action, platform) {
+        if (!platform || platform === "") {
+            grunt.warn("You must specify a platform (ios or android)!");
+        }
+        if (!action || action === "") {
+            grunt.warn("You must specify an action (build or webpack)!");
+        }
+
+        var baseTask = "exec:ci-" + action.toLowerCase() + "-demo:" + platform.toLowerCase();
+        grunt.task.run(
+            baseTask + ":"
+            // baseTask + ":ng"
+        );
+    });
+
+    grunt.registerTask("lint", [
+        "exec:checkRequiredReadmeSection:Installation",
+        "exec:checkRequiredReadmeSection:Configuration",
+        "exec:checkRequiredReadmeSection:API",
+        "exec:checkRequiredReadmeSection:Usage",
+        "exec:checkRequiredPackageJsonSection:license",
+        "exec:checkRequiredPackageJsonSection:nativescript",
+        "exec:tslint",
+    ]);
+
     grunt.registerTask("publish", [
         "build",
+        "lint",
         "exec:npm_publish"
     ]);
 };

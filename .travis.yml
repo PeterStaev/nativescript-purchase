@@ -1,22 +1,91 @@
-language: android
-jdk:
-  - oraclejdk8
+sudo: false
+
 android:
   components:
-  - platform-tools
-  - tools
-  - build-tools-23.0.3
-  - android-22
+    - tools
+    - platform-tools
+    - build-tools-25.0.2
+    - android-23
+    - android-25
+    - extra-android-m2repository
+
 before_cache:
-  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+    - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock 
+
 cache:
-  directories:
-  - "$HOME/.gradle/caches/"
-  - "$HOME/.gradle/wrapper/"  
-before_script:
-    - nvm install 4.2.3
-    - nvm use 4.2.3
-    - npm install -g grunt-cli
+    directories:
+        - .nvm
+        - $HOME/.gradle/caches/
+        - $HOME/.gradle/wrapper/
+
+install:
+    - echo no | npm install -g nativescript
+    - tns usage-reporting disable
+    - tns error-reporting disable
+    - echo no | npm install -g grunt-cli
     - npm install
-script:
-    grunt build
+    - grunt compile
+
+matrix:
+  include:
+    - stage: lint
+      language: node_js
+      os: linux
+      node_js: "6"
+      script: grunt lint
+
+    - stage: build
+      language: android
+      os: linux
+      env: 
+        - Android="25"
+      jdk: oraclejdk8
+      before_install: nvm install 6.10.3
+      script: "grunt ci:build:android"
+
+    - stage: build
+      os: osx
+      env: 
+        - iOS="10.3"
+        - Xcode="8.3"
+      osx_image: xcode8.3
+      language: node_js 
+      node_js: "6"
+      jdk: oraclejdk8
+      script: "grunt ci:build:ios"
+
+    - stage: webpack
+      language: android
+      os: linux
+      env:
+        - Android="25"
+        - Platform="Android"
+      jdk: oraclejdk8
+      before_install: nvm install 6.10.3
+      script: "grunt ci:webpack:android"
+    
+    - stage: webpack
+      os: osx
+      env: 
+        - iOS="10.3"
+        - Xcode="8.3"
+        - Platform="iOS"
+      osx_image: xcode8.3
+      language: node_js 
+      node_js: "6"
+      jdk: oraclejdk8
+      script: "grunt ci:webpack:ios"
+
+    - stage: deploy
+      if: branch = release
+      language: node_js 
+      node_js: "6"
+      before_deploy:
+          - cd bin/dist
+      deploy:
+        provider: npm
+        email: "peter@tangrasoft.com"
+        api_key:
+          secure: "sHQ+FefLjuxN+gWORpB/+fvIm9hEeaZvpPWiOuqEGIVFip9wcDTlDSXn5HNP7Qg65Jyj+sh/xzrsH9ujZ0FDO0QTdV6C+3WA5lsQaJAzN3Odwwi8eQs4Odqo8tgDfqSkfpy40pLf8n5jGv06wpr/0JOYu9vttrXjtpcRj2RwZ2EB0yIIkx4vpXppeEpShG2EJfT7vGn77wjMU9vist4NKgjygRrgZ2oc+OhGlvKNdZUpdaTR57w7ziZFIkCwmiX95s80WgFGLChbgNaBWyRh71i9OEcsx/d71bpG14bX2z5Bossr2J64JspbQdaagCclCmhyvnYJY8JQluZgOq/2hcaJumVCFXLhTInNxRDzO0bTfuelRRiIV5yAGNZSknh7XLgMTfsKkwRPxFdFvD1k7vqYRksAAcggqNE4MumhKnTv7slp0BCxR3u7CeawPbjrFLpLQ/oZRR/emPNt0oNcL4eKbQsy2OvCTPl09suw4sVAQBuc686FVAgDV3EU3j2obJqaWTbGi5e57Y8KqtbG+ZybHLYyYKyYD01oPoaJ3VHDsy4pugD7WDecASFlSbzmhcMhDHnXAQIAqoObAxg5oa5O5z75hoiZKKMMuroZxNJPizqCcOrxXaTSCKG7f00oaK/yb8iZlG5/wGuDZ6uvRfb5G3iO7v/jGGk8Nd5Np8Q="        skip_cleanup: true
+        on:
+          branch: release

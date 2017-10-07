@@ -5,7 +5,7 @@
         "**/.svn": true,
         "**/.hg": true,
         "**/.DS_Store": true,
-        "sample/**": true, 
+        "demo/**": true, 
         "bin/**": true
     }
 ,

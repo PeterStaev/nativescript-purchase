@@ -15,7 +15,7 @@ export function pageLoaded(args: observable.EventData) {
     viewModel = new observable.Observable();
 
     purchase.on(purchase.transactionUpdatedEvent, (transaction: Transaction) => {
-        console.dump(transaction);
+        console.dir(transaction);
         
         if (transaction.transactionState === TransactionState.Restored) {
             console.log(transaction.originalTransaction.transactionDate);
