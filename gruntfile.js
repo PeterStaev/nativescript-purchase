@@ -117,12 +117,18 @@
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-exec");
   
-    grunt.registerTask("compile", [
-        "clean:build",
-        "exec:tsCompile",
-        "exec:build_android_aar",
-        "copy"
-    ]);
+    grunt.registerTask("compile", function () {
+        var tasks = [
+            "clean:build",
+            "exec:tsCompile",
+            "copy"
+        ];
+        if (!process.env.iOS) {
+            tasks.splice(2, 0, "exec:build_android_aar");
+        }
+        
+        grunt.task.run(tasks);
+    });
     
     grunt.registerTask("build", [
         "exec:tslint",

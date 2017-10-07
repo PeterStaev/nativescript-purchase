@@ -17,8 +17,9 @@ In order to get intellisense and make TypeScript compile without problems, add t
 ```typescript
 /// <reference path="./node_modules/nativescript-purchase/nativescript-purchase.d.ts" />
 ```
+
 ## Configuration
-In order your in-app purchases to be recognized by the plugin you must configure those on the Google/iTunes side. You can check the in-depth guides at the bottom of the page to see how to do it step-by-step. 
+In order your in-app purchases to be recognized by the plugin you must configure those on the Google/iTunes side. You can check the [in-depth tutorials](#in-depth-tutorial) at the bottom of the page to see how to do it step-by-step. 
 
 ## API
 
@@ -191,7 +192,7 @@ $ npm install
 $ grunt compile
 $ cd demo
 ```
-You will not be able to directly run the demo, becuase you need to add your purchases to the stores. Also since I already registered the application id you will have to change that in the `package.json` file located in the `demo` folder. So make sure you read and follow the in-depth tutorials below in order to get started with the demo. 
+You will not be able to directly run the demo, becuase you need to add your purchases to the stores. Also since I already registered the application id you will have to change that in the `package.json` file located in the `demo` folder. So make sure you read and follow the [in-depth tutorials](#in-depth-tutorial) below in order to get started with the demo. 
 
 ## In-depth Tutorial
 1. [Adding the plugin to your application and creating a purchase workflow](https://www.tangrainc.com/blog/2017/02/implementing-app-purchases-nativescript-application-part-1/)
