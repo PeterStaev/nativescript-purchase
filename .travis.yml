@@ -85,6 +85,7 @@ matrix:
       jdk: oraclejdk8
       os: linux
       before_install: nvm install 6.10.3
+      script: skip
       before_deploy:
           - cd bin/dist
       deploy:
