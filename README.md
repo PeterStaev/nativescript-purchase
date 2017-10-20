@@ -184,7 +184,11 @@ purchase.restorePurchases();
 ```
 
 ## Demo
-This repository includes a plain NativeScript demo. In order to set it up run the following in your shell:
+This repository includes a plain NativeScript demo. Note that in order to set up and run the demo you need to have the Grunt CLI installed globally. If you don't have it installed, you can do it by running the following in your shell:
+```shell
+$ npm install -g grunt-cli
+```
+Once you have Grunt CLI set up in order to set it up the demo run the following in your shell:
 ```shell
 $ git clone https://github.com/peterstaev/nativescript-purchase
 $ cd nativescript-purchase
