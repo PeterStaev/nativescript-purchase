@@ -24,11 +24,20 @@ export function pageLoaded(args: observable.EventData) {
             purchase.consumePurchase(transaction.transactionReceipt)
                 .then((responseCode) => console.log(responseCode))
                 .catch((e) => console.log(e));
-        }    
+        }
+        if (transaction.transactionState === TransactionState.Purchased) {
+            console.dir(transaction);
+        }
     });
 
     purchase.getProducts()
-        .then((res) => viewModel.set("items", res))
+        .then((res) => {
+            console.dir(res);
+            viewModel.set("items", res);
+            for (const item of res) {
+                console.log(item.nativeValue.toString());
+            }
+        })
         .catch((e) => alert(e));
     
     page.bindingContext = viewModel;

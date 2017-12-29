@@ -14,11 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ***************************************************************************** */
 
-import * as common from "./transaction-common";
+import { TransactionBase, TransactionState } from "./transaction-common";
 
-global.moduleMerge(common, exports);
+export * from "./transaction-common";
 
-export class Transaction extends common.Transaction {
+export class Transaction extends TransactionBase {
 
     constructor(nativeValue: org.json.JSONObject) {
         super(nativeValue);
@@ -26,15 +26,15 @@ export class Transaction extends common.Transaction {
         if (nativeValue) {
             switch (nativeValue.getInt("purchaseState")) {
                 case 0:
-                    this.transactionState = common.TransactionState.Purchased;
+                    this.transactionState = TransactionState.Purchased;
                     break;
 
                 case 1:
-                    this.transactionState = common.TransactionState.Failed;
+                    this.transactionState = TransactionState.Failed;
                     break;
 
                 case 2:
-                    this.transactionState = common.TransactionState.Refunded;
+                    this.transactionState = TransactionState.Refunded;
                     break;
             }
 

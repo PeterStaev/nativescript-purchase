@@ -20,7 +20,7 @@ import * as types from "utils/types";
 import { Product } from "nativescript-purchase/product";
 import { Transaction, TransactionState } from "nativescript-purchase/transaction";
 
-global.moduleMerge(common, exports);
+export * from "./purchase-common";
 
 let helper: com.tangrainc.inappbilling.InAppBillingHelper;
 let currentBuyPayload: string;
@@ -28,7 +28,7 @@ let currentBuyProductIdentifier: string;
 
 export function init(productIdentifiers: Array<string>): Promise<any> {
     return new Promise((resolve, reject) => {
-        let nativeArray = Array.create(java.lang.String, productIdentifiers.length);
+        const nativeArray = Array.create(java.lang.String, productIdentifiers.length);
         for (let loop = 0; loop < productIdentifiers.length; loop++) {
             nativeArray[loop] = productIdentifiers[loop].toLowerCase(); // Android product IDs are all lower case
         }
@@ -40,14 +40,14 @@ export function init(productIdentifiers: Array<string>): Promise<any> {
 
         application.android.on(application.AndroidApplication.activityResultEvent, (args: application.AndroidActivityResultEventData) => {
             if (args.requestCode === com.tangrainc.inappbilling.InAppBillingHelper.BUY_INTENT_REQUEST_CODE) {
-                let intent = args.intent as android.content.Intent;
-                let responseCode = intent.getIntExtra("RESPONSE_CODE", 0);
-                let purchaseData = intent.getStringExtra("INAPP_PURCHASE_DATA");
-                let dataSignature = intent.getStringExtra("INAPP_DATA_SIGNATURE");
+                const intent = args.intent as android.content.Intent;
+                const responseCode = intent.getIntExtra("RESPONSE_CODE", 0);
+                const purchaseData = intent.getStringExtra("INAPP_PURCHASE_DATA");
+                const dataSignature = intent.getStringExtra("INAPP_DATA_SIGNATURE");
                 let tran: Transaction;
                 
                 if (args.resultCode === android.app.Activity.RESULT_OK && responseCode === 0 && !types.isNullOrUndefined(purchaseData)) {
-                    let nativeValue = new org.json.JSONObject(purchaseData);
+                    const nativeValue = new org.json.JSONObject(purchaseData);
                     nativeValue.put("signature", dataSignature);
                     tran = new Transaction(nativeValue);
                 }
@@ -65,21 +65,26 @@ export function init(productIdentifiers: Array<string>): Promise<any> {
 
 export function getProducts(): Promise<Array<Product>>{
     return new Promise<Array<Product>>((resolve, reject) => {
-        futureToPromise(helper.getProducts())
-            .then((result: Array<org.json.JSONObject>) => {
-                let productArray: Array<Product> = [];
-                for (let loop = 0; loop < result.length; loop++) {
-                    productArray.push(new Product(result[loop]));
+        Promise.all([
+            futureToPromise(helper.getProducts("inapp")),
+            futureToPromise(helper.getProducts("subs")),
+        ])
+            .then((result: Array<Array<org.json.JSONObject>>) => {
+                const productArray: Array<Product> = [];
+                for (let type = 0; type <= 1; type++) {
+                    for (const item of result[type]) {
+                        productArray.push(new Product(item, (type === 0 ? "inapp" : "subs")));
+                    }
                 }
-                
+
                 resolve(productArray);
             })
-            .catch(reject);      
+            .catch(reject);
     });
 }
 
 export function buyProduct(product: Product, developerPayload?: string) {
-    let tran = new Transaction(null);
+    const tran = new Transaction(null);
     tran.transactionState = TransactionState.Purchasing;
     tran.productIdentifier = product.productIdentifier;
     tran.developerPayload = developerPayload;
@@ -88,7 +93,10 @@ export function buyProduct(product: Product, developerPayload?: string) {
     currentBuyProductIdentifier = product.productIdentifier;
     currentBuyPayload = developerPayload;
     
-    helper.startBuyIntent(application.android.foregroundActivity, product.productIdentifier, developerPayload || "");
+    helper.startBuyIntent(application.android.foregroundActivity,
+        product.productIdentifier,
+        product.productType,
+        developerPayload || "");
 }
 
 export function consumePurchase(token: string): Promise<number> {
@@ -98,16 +106,20 @@ export function consumePurchase(token: string): Promise<number> {
 }
 
 export function restorePurchases() {
-    futureToPromise(helper.getPurchases())
-        .then((result: Array<org.json.JSONObject>) => {
-            for (let loop = 0; loop < result.length; loop++) {
-                let tran = new Transaction(null);
-                tran.originalTransaction = new Transaction(result[loop]);
+    Promise.all([
+        futureToPromise(helper.getPurchases(null, "inapp")),
+        futureToPromise(helper.getPurchases(null, "subs")),
+    ]).then((result: Array<Array<org.json.JSONObject>>) => {
+        for (let type = 0; type <= 1; type++) {
+            for (const item of result[type]) {
+                const tran = new Transaction(null);
+                tran.originalTransaction = new Transaction(item);
                 tran.transactionState = TransactionState.Restored;
 
                 common._notify(common.transactionUpdatedEvent, tran);
             }
-        });
+        }    
+    });
 }
 
 export function canMakePayments(): boolean{

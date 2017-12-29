@@ -14,11 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ***************************************************************************** */
 
-import * as common from "./product-common";
+import { ProductBase, ProductType} from "./product-common";
 
-export class Product extends common.Product {
-    constructor(nativeValue: SKProduct) {
-        super(nativeValue);
+export * from "./product-common";
+
+export class Product extends ProductBase {
+    constructor(nativeValue: SKProduct, type: ProductType) {
+        super(nativeValue, type);
         
         let formatter = NSNumberFormatter.alloc().init();
         formatter.numberStyle = NSNumberFormatterStyle.CurrencyStyle;

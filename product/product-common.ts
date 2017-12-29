@@ -16,7 +16,9 @@ limitations under the License.
 
 import * as definition from "nativescript-purchase/product";
 
-export class Product implements definition.Product {
+export { ProductType } from "nativescript-purchase/product";
+
+export class ProductBase implements definition.Product {
     public nativeValue: any;
 
     public productIdentifier: string;
@@ -25,9 +27,11 @@ export class Product implements definition.Product {
     public priceAmount: number;
     public priceFormatted: string;
     public priceCurrencyCode: string;
+    public productType: definition.ProductType;
+    public subscriptionPeriod?: string;
     
-    
-    constructor(nativeValue: any) {
+    constructor(nativeValue: any, type: definition.ProductType) {
         this.nativeValue = nativeValue;
+        this.productType = type;
     }
 }

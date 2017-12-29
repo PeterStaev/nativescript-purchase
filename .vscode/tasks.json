@@ -9,7 +9,11 @@
             "problemMatcher": [
                 "$tsc",
                 "$tslint4"
-            ]
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ]
 }

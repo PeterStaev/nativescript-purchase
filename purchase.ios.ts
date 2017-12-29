@@ -18,7 +18,7 @@ import { Product } from "nativescript-purchase/product";
 import { Transaction } from "nativescript-purchase/transaction";
 import * as common from "./purchase-common";
 
-global.moduleMerge(common, exports);
+export * from "./purchase-common";
 
 let productRequest: SKProductsRequest;
 let productIds: NSMutableSet<string>;
@@ -88,7 +88,7 @@ class SKProductRequestDelegateImpl extends NSObject implements SKProductsRequest
         let result: Array<Product> = [];
 
         for (let loop = 0; loop < products.count; loop++) {
-            result.push(new Product(products.objectAtIndex(loop)));
+            result.push(new Product(products.objectAtIndex(loop), "inapp"));
         }
 
         this._resolve(result);

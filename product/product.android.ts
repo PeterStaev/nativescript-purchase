@@ -14,11 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ***************************************************************************** */
 
-import * as common from "./product-common";
+import { ProductBase, ProductType} from "./product-common";
 
-export class Product extends common.Product {
-    constructor(nativeValue: org.json.JSONObject) {
-        super(nativeValue);
+export * from "./product-common";
+
+export class Product extends ProductBase {
+    constructor(nativeValue: org.json.JSONObject, type: ProductType) {
+        super(nativeValue, type);
         
         this.productIdentifier = nativeValue.getString("productId");
         this.localizedDescription = nativeValue.getString("description");
@@ -26,5 +28,8 @@ export class Product extends common.Product {
         this.priceAmount = nativeValue.getInt("price_amount_micros") / 1000000;
         this.priceFormatted = nativeValue.getString("price");
         this.priceCurrencyCode = nativeValue.getString("price_currency_code");
+        if (nativeValue.has("subscriptionPeriod")) {
+            this.subscriptionPeriod = nativeValue.getString("subscriptionPeriod");
+        }
     }
 }

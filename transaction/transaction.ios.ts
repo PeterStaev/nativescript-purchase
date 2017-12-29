@@ -14,33 +14,33 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ***************************************************************************** */
 
-import * as common from "./transaction-common";
+import { TransactionBase, TransactionState } from "./transaction-common";
 
-global.moduleMerge(common, exports);
+export * from "./transaction-common";
 
-export class Transaction extends common.Transaction {
+export class Transaction extends TransactionBase {
     constructor(nativeValue: SKPaymentTransaction) {
         super(nativeValue);
         
         switch (nativeValue.transactionState) {
             case SKPaymentTransactionState.Deferred:
-                this.transactionState = common.TransactionState.Deferred;
+                this.transactionState = TransactionState.Deferred;
                 break;
 
             case SKPaymentTransactionState.Failed:
-                this.transactionState = common.TransactionState.Failed;
+                this.transactionState = TransactionState.Failed;
                 break;
                 
             case SKPaymentTransactionState.Purchased:
-                this.transactionState = common.TransactionState.Purchased;
+                this.transactionState = TransactionState.Purchased;
                 break;
                 
             case SKPaymentTransactionState.Purchasing:
-                this.transactionState = common.TransactionState.Purchasing;
+                this.transactionState = TransactionState.Purchasing;
                 break;
                 
             case SKPaymentTransactionState.Restored:
-                this.transactionState = common.TransactionState.Restored;
+                this.transactionState = TransactionState.Restored;
                 this.originalTransaction = new Transaction(nativeValue.originalTransaction);
                 break;
         }

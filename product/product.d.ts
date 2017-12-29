@@ -15,6 +15,8 @@ limitations under the License.
 ***************************************************************************** */
 
 declare module "nativescript-purchase/product" {
+    export type ProductType = "inapp" | "subs";
+
     export class Product {
         public nativeValue: any;
 
@@ -24,7 +26,8 @@ declare module "nativescript-purchase/product" {
         public priceAmount: number;
         public priceFormatted: string;
         public priceCurrencyCode: string;
+        public productType: ProductType;
         
-        constructor(nativeValue: any);
+        constructor(nativeValue: any, type: ProductType);
     }    
 }

@@ -70,8 +70,13 @@ The numerical value of the price for this in-app product based on the currency u
 The formatted `priceAmount` with the corresponding currency symbol of the user's app store. 
 
 * **priceCurrencyCode** - *string*  
-The ISO4217 currency code of the price (for example BGN, EUR, USD, etc.)
+The [ISO4217](https://en.wikipedia.org/wiki/ISO_4217#Active_codes) currency code of the price (for example BGN, EUR, USD, etc.)
 
+* **productType** - *"inapp" | "subs"*  
+The type of the product - in-app purchase or subscription
+
+* **subscriptionPeriod** - *string*  
+The [ISO8601](https://en.wikipedia.org/wiki/ISO_8601#Durations) duration of the subscription. For example `P1D` stands for a daily subscription, `P1M` is a monthly subscription, `P3M` is a three month subscription. The property has a value only for products of type `"subs"`
 
 ### `Transaction` properties
 * **nativeValue**  

@@ -16,7 +16,7 @@ limitations under the License.
 
 import * as definition from "nativescript-purchase/transaction";
 
-export class Transaction implements definition.Transaction {
+export class TransactionBase implements definition.Transaction {
     public nativeValue: any;
 
     public transactionState: string;
@@ -24,7 +24,7 @@ export class Transaction implements definition.Transaction {
     public transactionIdentifier: string;
     public transactionDate: Date;
     public transactionReceipt: string;
-    public originalTransaction: Transaction;
+    public originalTransaction: TransactionBase;
     public developerPayload: string; /* Android Only */
     public dataSignature: string; /* Android Only */
     

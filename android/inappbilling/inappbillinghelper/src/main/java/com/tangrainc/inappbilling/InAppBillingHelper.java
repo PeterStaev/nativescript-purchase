@@ -71,7 +71,7 @@ public class InAppBillingHelper {
         _context.bindService(serviceIntent, _serviceConn, Context.BIND_AUTO_CREATE);
     }
 
-    public ListenableFuture<JSONObject[]> getProducts() {
+    public ListenableFuture<JSONObject[]> getProducts(final String type) {
         return _executor.submit(new Callable<JSONObject[]>() {
             @Override
             public JSONObject[] call() throws Exception {
@@ -88,7 +88,7 @@ public class InAppBillingHelper {
                 Bundle queryProducts = new Bundle();
                 queryProducts.putStringArrayList("ITEM_ID_LIST", new ArrayList< >(Arrays.asList(_productIdentifiers)));
 
-                Bundle productDetails = _service.getSkuDetails(3, _context.getPackageName(), "inapp", queryProducts);
+                Bundle productDetails = _service.getSkuDetails(3, _context.getPackageName(), type, queryProducts);
                 ArrayList<JSONObject> result = new ArrayList< >();
 
                 int response = productDetails.getInt("RESPONSE_CODE");
@@ -108,8 +108,8 @@ public class InAppBillingHelper {
         });
     }
 
-    public void startBuyIntent(Activity foregroundActivity, String productIdentifier, String payload) throws Exception {
-        Bundle buyIntentBundle = _service.getBuyIntent(3, _context.getPackageName(), productIdentifier, "inapp", payload);
+    public void startBuyIntent(Activity foregroundActivity, String productIdentifier, String type, String payload) throws Exception {
+        Bundle buyIntentBundle = _service.getBuyIntent(3, _context.getPackageName(), productIdentifier, type, payload);
         PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
 
         if (pendingIntent == null) {
@@ -138,18 +138,18 @@ public class InAppBillingHelper {
         });
     }
 
-    public ListenableFuture<JSONObject[]> getPurchases() {
-        return this.getPurchases(null);
+    public ListenableFuture<JSONObject[]> getPurchases(String type) {
+        return this.getPurchases(null, type);
     }
 
-    public ListenableFuture<JSONObject[]> getPurchases(final String continuationToken) {
+    public ListenableFuture<JSONObject[]> getPurchases(final String continuationToken, final String type) {
         return _executor.submit(new Callable<JSONObject[]>() {
             @Override
             public JSONObject[] call() throws Exception {
                 Log.d(TAG, "Getting Purchases...");
 
                 ArrayList<JSONObject> result = new ArrayList< >();
-                Bundle ownedItems = _service.getPurchases(3, _context.getPackageName(), "inapp", continuationToken);
+                Bundle ownedItems = _service.getPurchases(3, _context.getPackageName(), type, continuationToken);
                 int response = ownedItems.getInt("RESPONSE_CODE");
 
                 if (response == 0) {
