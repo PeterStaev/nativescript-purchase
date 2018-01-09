@@ -15,7 +15,7 @@ export function pageLoaded(args: observable.EventData) {
     viewModel = new observable.Observable();
 
     purchase.on(purchase.transactionUpdatedEvent, (transaction: Transaction) => {
-        console.dir(transaction);
+        console.log(JSON.stringify(transaction));
         
         if (transaction.transactionState === TransactionState.Restored) {
             console.log(transaction.originalTransaction.transactionDate);
@@ -25,20 +25,15 @@ export function pageLoaded(args: observable.EventData) {
                 .then((responseCode) => console.log(responseCode))
                 .catch((e) => console.log(e));
         }
-        if (transaction.transactionState === TransactionState.Purchased) {
-            console.dir(transaction);
-        }
     });
 
     purchase.getProducts()
         .then((res) => {
-            console.dir(res);
             viewModel.set("items", res);
-            for (const item of res) {
-                console.log(item.nativeValue.toString());
-            }
         })
         .catch((e) => alert(e));
+    
+    console.log(purchase.getStoreReceipt().replace(/[\r\n]/gi, ""));
     
     page.bindingContext = viewModel;
 }

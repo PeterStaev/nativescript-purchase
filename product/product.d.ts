@@ -27,7 +27,8 @@ declare module "nativescript-purchase/product" {
         public priceFormatted: string;
         public priceCurrencyCode: string;
         public productType: ProductType;
+        public subscriptionPeriod?: string;
         
-        constructor(nativeValue: any, type: ProductType);
+        constructor(nativeValue: any, type?: ProductType);
     }    
 }

@@ -49,3 +49,7 @@ export function off(eventName: string, handler?: (data: any) => void) {
         observers[eventName].splice(index, 1);
     }    
 }
+
+export function getStoreReceipt(): string {
+    return undefined;
+}

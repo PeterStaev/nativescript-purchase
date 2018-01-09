@@ -51,7 +51,7 @@ export function buyProduct(product: Product) {
         throw "Invalid Product! (missing native value)";
     }
 
-    let payment = SKPayment.paymentWithProduct(product.nativeValue);
+    const payment = SKPayment.paymentWithProduct(product.nativeValue);
     SKPaymentQueue.defaultQueue().addPayment(payment);
 }
 
@@ -69,14 +69,24 @@ export function canMakePayments(): boolean {
     return SKPaymentQueue.canMakePayments();
 }
 
-class SKProductRequestDelegateImpl extends NSObject implements SKProductsRequestDelegate {
-    public static ObjCProtocols = [SKProductsRequestDelegate];
+export function getStoreReceipt(): string {
+    const receiptData = NSData.dataWithContentsOfURL(NSBundle.mainBundle.appStoreReceiptURL);
 
+    if (receiptData) {
+        return receiptData.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength);
+    }
+    else {
+        return null;
+    }
+}
+
+@ObjCClass(SKProductsRequestDelegate)
+class SKProductRequestDelegateImpl extends NSObject implements SKProductsRequestDelegate {
     private _resolve: Function;
     private _reject: Function;
     
     public static initWithResolveReject(resolve: Function, reject: Function): SKProductRequestDelegateImpl {
-        let delegate: SKProductRequestDelegateImpl = SKProductRequestDelegateImpl.new() as SKProductRequestDelegateImpl;
+        const delegate: SKProductRequestDelegateImpl = SKProductRequestDelegateImpl.new() as SKProductRequestDelegateImpl;
         delegate._resolve = resolve;
         delegate._reject = reject;
 
@@ -84,11 +94,11 @@ class SKProductRequestDelegateImpl extends NSObject implements SKProductsRequest
     }
 
     public productsRequestDidReceiveResponse(request: SKProductsRequest, response: SKProductsResponse) {
-        let products = response.products;
-        let result: Array<Product> = [];
+        const products = response.products;
+        const result: Array<Product> = [];
 
         for (let loop = 0; loop < products.count; loop++) {
-            result.push(new Product(products.objectAtIndex(loop), "inapp"));
+            result.push(new Product(products.objectAtIndex(loop)));
         }
 
         this._resolve(result);
@@ -106,13 +116,12 @@ class SKProductRequestDelegateImpl extends NSObject implements SKProductsRequest
     }
 }
 
+@ObjCClass(SKPaymentTransactionObserver)
 class SKPaymentTransactionObserverImpl extends NSObject implements SKPaymentTransactionObserver {
-    public static ObjCProtocols = [SKPaymentTransactionObserver];
-
     public paymentQueueUpdatedTransactions(queue: SKPaymentQueue, transactions: NSArray<SKPaymentTransaction>) {
         for (let loop = 0; loop < transactions.count; loop++) {
-            let transaction = transactions.objectAtIndex(loop);
-            let resultTransaction = new Transaction(transaction);
+            const transaction = transactions.objectAtIndex(loop);
+            const resultTransaction = new Transaction(transaction);
 
             common._notify(common.transactionUpdatedEvent, resultTransaction);
 

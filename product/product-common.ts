@@ -30,7 +30,7 @@ export class ProductBase implements definition.Product {
     public productType: definition.ProductType;
     public subscriptionPeriod?: string;
     
-    constructor(nativeValue: any, type: definition.ProductType) {
+    constructor(nativeValue: any, type?: definition.ProductType) {
         this.nativeValue = nativeValue;
         this.productType = type;
     }

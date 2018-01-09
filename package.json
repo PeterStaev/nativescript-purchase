@@ -44,7 +44,7 @@
 
   "devDependencies": {
     "tns-core-modules": "^3.0.0",
-    "tns-platform-declarations": "3.0.1",
+    "tns-platform-declarations": "3.4.0",
     "tslint": "^4.5.1",
     "typescript": "~2.2.2",
 

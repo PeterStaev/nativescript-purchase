@@ -18,11 +18,13 @@ import { ProductBase, ProductType} from "./product-common";
 
 export * from "./product-common";
 
+const unitsAsString = ["D", "W", "M", "Y"];
+
 export class Product extends ProductBase {
     constructor(nativeValue: SKProduct, type: ProductType) {
         super(nativeValue, type);
         
-        let formatter = NSNumberFormatter.alloc().init();
+        const formatter = NSNumberFormatter.alloc().init();
         formatter.numberStyle = NSNumberFormatterStyle.CurrencyStyle;
         formatter.locale = nativeValue.priceLocale;
 
@@ -32,5 +34,17 @@ export class Product extends ProductBase {
         this.priceAmount = nativeValue.price.doubleValue;
         this.priceFormatted = formatter.stringFromNumber(nativeValue.price as any);
         this.priceCurrencyCode = nativeValue.priceLocale.objectForKey(NSLocaleCurrencyCode);
+
+        // NOTE: The following code will can ONLY on ios 11.2 as the subscriptionPeriod property is a new one
+        const subscriptionPeriod = (nativeValue as any).subscriptionPeriod;
+        if (subscriptionPeriod) {
+            if (subscriptionPeriod.numberOfUnits > 0) {
+                this.productType = "subs";
+                this.subscriptionPeriod = `P${subscriptionPeriod.numberOfUnits}${unitsAsString[subscriptionPeriod.unit]}`;
+            }
+            else {
+                this.productType = "inapp";
+            }
+        } 
     }
 }
