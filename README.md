@@ -46,6 +46,9 @@ Consumes the purchases represented by the given transaction token. If the promis
 * **restorePurchases(): void**  
 Restores previous purchased items for the current user. 
 
+* **getStoreReceipt(): string**  
+Gets the application's Base64 encoded store receipt for the currently logged in store user. This is usefull when checking subscription status under iOS. For Android the function always returns `undefined`.
+
 ### Events
 * **transactionUpdated**  
 Triggered a buy/restore transaction changes its state. You receive a `Transaction` object where you can check the status and other properties  *(see below)* of the transaction. 
