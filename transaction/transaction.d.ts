@@ -24,7 +24,7 @@ declare module "nativescript-purchase/transaction" {
         public transactionDate: Date;
         public transactionReceipt: string;
         public originalTransaction: Transaction;
-        public developerPayload: string; /* Android Only */
+        public developerPayload: string;
         public dataSignature: string; /* Android Only */
 
         constructor(nativeValue: any);

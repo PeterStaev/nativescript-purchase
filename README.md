@@ -109,7 +109,7 @@ The Base64 encoded transaction receipt. You can use this to do additional verifi
 * **originalTransaction** - *Transaction*  
 This will be present only when restoring purchases and will contain the original transaction that purchased a given product. 
 
-* **developerPayload** - *string (Android only)*  
+* **developerPayload** - *string*  
 Custom data sent with `buyProduct`. 
 
 * **dataSignature** - *string (Android only)*  
