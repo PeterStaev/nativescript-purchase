@@ -32,9 +32,7 @@ export function pageLoaded(args: observable.EventData) {
             viewModel.set("items", res);
         })
         .catch((e) => alert(e));
-    
-    console.log(purchase.getStoreReceipt().replace(/[\r\n]/gi, ""));
-    
+        
     page.bindingContext = viewModel;
 }
 

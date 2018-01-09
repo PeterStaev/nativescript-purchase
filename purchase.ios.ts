@@ -24,6 +24,7 @@ let productRequest: SKProductsRequest;
 let productIds: NSMutableSet<string>;
 let productRequestDelegate: SKProductRequestDelegateImpl;
 let paymentTransactionObserver: SKPaymentTransactionObserverImpl;
+let storedDeveloperPayload: string;
 
 export function init(productIdentifiers: Array<string>): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -46,10 +47,12 @@ export function getProducts(): Promise<Array<Product>> {
     });
 }
 
-export function buyProduct(product: Product) {
+export function buyProduct(product: Product, developerPayload?: string) {
     if (!product.nativeValue) {
         throw "Invalid Product! (missing native value)";
     }
+
+    storedDeveloperPayload = developerPayload;
 
     const payment = SKPayment.paymentWithProduct(product.nativeValue);
     SKPaymentQueue.defaultQueue().addPayment(payment);
@@ -123,12 +126,15 @@ class SKPaymentTransactionObserverImpl extends NSObject implements SKPaymentTran
             const transaction = transactions.objectAtIndex(loop);
             const resultTransaction = new Transaction(transaction);
 
+            resultTransaction.developerPayload = storedDeveloperPayload;
+
             common._notify(common.transactionUpdatedEvent, resultTransaction);
 
             if (transaction.transactionState === SKPaymentTransactionState.Failed
                 || transaction.transactionState === SKPaymentTransactionState.Purchased
                 || transaction.transactionState === SKPaymentTransactionState.Restored) {
                 SKPaymentQueue.defaultQueue().finishTransaction(transaction);
+                storedDeveloperPayload = undefined;
             }           
         }
     }
