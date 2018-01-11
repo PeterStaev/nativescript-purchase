@@ -212,6 +212,8 @@ You will not be able to directly run the demo, becuase you need to add your purc
 3. [Configuring Google Play Store and making purchases on Android](https://www.tangrainc.com/blog/2017/06/implementing-app-purchases-nativescript-application-part-3/)
 
 ## Donate
+[![Donate](https://img.shields.io/badge/paypal-donate-brightgreen.svg)](https://bit.ly/2AS9QKB)
+
 `bitcoin:14fjysmpwLvSsAskvLASw6ek5XfhTzskHC`
 
 ![Donate](https://www.tangrainc.com/qr.png)
