@@ -76,7 +76,7 @@ export function getStoreReceipt(): string {
     const receiptData = NSData.dataWithContentsOfURL(NSBundle.mainBundle.appStoreReceiptURL);
 
     if (receiptData) {
-        return receiptData.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength);
+        return receiptData.base64EncodedStringWithOptions(0);
     }
     else {
         return null;
