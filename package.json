@@ -1,6 +1,6 @@
 {
   "name": "nativescript-purchase",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A NativeScript plugin for making in-app purchases",
   "main": "purchase",
   "typings": "nativescript-purchase.d.ts",
@@ -39,7 +39,7 @@
   "license": "Apache-2.0",
 
   "peerDependencies": {
-    "tns-core-modules": "^3.0.0"
+    "tns-core-modules": ">=3"
   },
 
   "devDependencies": {
