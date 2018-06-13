@@ -77,7 +77,7 @@ public class InAppBillingHelper {
             public JSONObject[] call() throws Exception {
                 // Wait for the service to be initialized (if call too soon after constructor)
                 int loop = 0;
-                while (_service == null || loop < 20) {
+                while (_service == null && loop < 20) {
                     Thread.sleep(500);
                     loop++;
                 }
@@ -125,7 +125,7 @@ public class InAppBillingHelper {
             public Integer call() throws Exception {
                 // Wait for the service to be initialized (if call too soon after constructor)
                 int loop = 0;
-                while (_service == null || loop < 20) {
+                while (_service == null && loop < 20) {
                     Thread.sleep(500);
                     loop++;
                 }
