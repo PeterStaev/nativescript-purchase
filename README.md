@@ -28,7 +28,7 @@ In order your in-app purchases to be recognized by the plugin you must configure
 String value used when hooking to `transactionUpdated` event.
 
 ### Static methods
-* **init(string[]): void**  
+* **init(string[]): Promise<void>**  
 Initializes the plugin for work with the specified in-app purchase identifiers. 
 
 * **getProducts(): Promise<Product[]>**  
@@ -117,21 +117,25 @@ The signature for the transaction.
 
 ## Usage
 
-First we need to initialize the plugin with a list for product identifier that will be availabel for purchase. This is best to be done before application start. 
+First we need to initialize the plugin with a list for product identifier that will be availabel for purchase. This is best to be done before application start.  
+Note that it is possible that the initialization of the plugin takes more time than the application to boot. So especially in the cases that you load the products on your landing page, it is best that to save the `Promise` returned by the `init()` method and then check it before trying to get your products. 
+
 ```typescript
 import *  as purchase from "nativescript-purchase";
-purchase.init(["com.sample.purchase.coolproduct1", "com.sample.purchase.coolproduct2"]);
+(global as any).purchaseInitPromise = purchase.init(["com.sample.purchase.coolproduct1", "com.sample.purchase.coolproduct2"]);
 ```
 
 To get the actual products with details (like title, price, currency, etc.) you should use:
 ```typescript
 import { Product } from "nativescript-purchase/product";
 
-purchase.getProducts().then((products: Array<Product>) => {
-    products.forEach((product: Product) => {
-        console.log(product.productIdentifier);
-        console.log(product.localizedTitle);
-        console.log(product.priceFormatted);
+(global as any).purchaseInitPromise.then(() => {
+    purchase.getProducts().then((products: Array<Product>) => {
+        products.forEach((product: Product) => {
+            console.log(product.productIdentifier);
+            console.log(product.localizedTitle);
+            console.log(product.priceFormatted);
+        });
     });
 });
 ```
