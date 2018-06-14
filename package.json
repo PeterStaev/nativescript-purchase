@@ -1,6 +1,6 @@
 {
   "name": "nativescript-purchase",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "A NativeScript plugin for making in-app purchases",
   "main": "purchase",
   "typings": "nativescript-purchase.d.ts",
@@ -34,7 +34,8 @@
   ],
   "author": "Peter Staev <peter@tangrasoft.com>",
   "contributors": [
-    "Sven Ziegler (https://github.com/svzi)"
+    "Sven Ziegler (https://github.com/svzi)",
+    "Yoann Wackers (https://github.com/Heer0)"
   ],  
   "license": "Apache-2.0",
 
