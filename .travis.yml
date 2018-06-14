@@ -34,7 +34,7 @@ matrix:
       language: android
       jdk: oraclejdk8
       os: linux
-      before_install: nvm install 6.10.3
+      before_install: nvm install 8.11.3
       script: grunt lint
 
     - stage: build
@@ -43,7 +43,7 @@ matrix:
       env: 
         - Android="26"
       jdk: oraclejdk8
-      before_install: nvm install 6.10.3
+      before_install: nvm install 8.11.3
       script: "grunt ci:build:android"
 
     - stage: build
@@ -53,7 +53,7 @@ matrix:
         - Xcode="8.3"
       osx_image: xcode8.3
       language: node_js 
-      node_js: "6"
+      node_js: "8"
       jdk: oraclejdk8
       script: "grunt ci:build:ios"
 
@@ -64,7 +64,7 @@ matrix:
         - Android="26"
         - Platform="Android"
       jdk: oraclejdk8
-      before_install: nvm install 6.10.3
+      before_install: nvm install 8.11.3
       script: "grunt ci:webpack:android"
     
     - stage: webpack
@@ -75,7 +75,7 @@ matrix:
         - Platform="iOS"
       osx_image: xcode8.3
       language: node_js 
-      node_js: "6"
+      node_js: "8"
       jdk: oraclejdk8
       script: "grunt ci:webpack:ios"
 
@@ -84,7 +84,7 @@ matrix:
       language: android
       jdk: oraclejdk8
       os: linux
-      before_install: nvm install 6.10.3
+      before_install: nvm install 8.11.3
       script: skip
       before_deploy:
           - cd bin/dist
