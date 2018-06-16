@@ -41,22 +41,26 @@ export function init(productIdentifiers: Array<string>): Promise<any> {
         application.android.on(application.AndroidApplication.activityResultEvent, (args: application.AndroidActivityResultEventData) => {
             if (args.requestCode === com.tangrainc.inappbilling.InAppBillingHelper.BUY_INTENT_REQUEST_CODE) {
                 const intent = args.intent as android.content.Intent;
-                const responseCode = intent.getIntExtra("RESPONSE_CODE", 0);
-                const purchaseData = intent.getStringExtra("INAPP_PURCHASE_DATA");
-                const dataSignature = intent.getStringExtra("INAPP_DATA_SIGNATURE");
                 let tran: Transaction;
+
+                if (intent) {
+                    const responseCode = intent.getIntExtra("RESPONSE_CODE", 0);
+                    const purchaseData = intent.getStringExtra("INAPP_PURCHASE_DATA");
+                    const dataSignature = intent.getStringExtra("INAPP_DATA_SIGNATURE");
                 
-                if (args.resultCode === android.app.Activity.RESULT_OK && responseCode === 0 && !types.isNullOrUndefined(purchaseData)) {
-                    const nativeValue = new org.json.JSONObject(purchaseData);
-                    nativeValue.put("signature", dataSignature);
-                    tran = new Transaction(nativeValue);
+                    if (args.resultCode === android.app.Activity.RESULT_OK && responseCode === 0 && !types.isNullOrUndefined(purchaseData)) {
+                        const nativeValue = new org.json.JSONObject(purchaseData);
+                        nativeValue.put("signature", dataSignature);
+                        tran = new Transaction(nativeValue);
+                    }
+                    else {
+                        tran = getFailedTransaction();
+                    }
                 }
                 else {
-                    tran = new Transaction(null);
-                    tran.transactionState = TransactionState.Failed;
-                    tran.productIdentifier = currentBuyProductIdentifier;
-                    tran.developerPayload = currentBuyPayload;
+                    tran = getFailedTransaction();
                 }
+                
                 common._notify(common.transactionUpdatedEvent, tran);
             }
         });
@@ -124,6 +128,15 @@ export function restorePurchases() {
 
 export function canMakePayments(): boolean{
     return true;
+}
+
+function getFailedTransaction() {
+    const tran = new Transaction(null);
+    tran.transactionState = TransactionState.Failed;
+    tran.productIdentifier = currentBuyProductIdentifier;
+    tran.developerPayload = currentBuyPayload;
+
+    return tran;
 }
 
 function futureToPromise(future: any /* ListenableFuture */): Promise<any> {
