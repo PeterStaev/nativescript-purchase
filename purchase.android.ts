@@ -41,12 +41,12 @@ export function init(productIdentifiers: Array<string>): Promise<any> {
         application.android.on(application.AndroidApplication.activityResultEvent, (args: application.AndroidActivityResultEventData) => {
             if (args.requestCode === com.tangrainc.inappbilling.InAppBillingHelper.BUY_INTENT_REQUEST_CODE) {
                 const intent = args.intent as android.content.Intent;
-                const responseCode = intent.getIntExtra("RESPONSE_CODE", 0);
-                const purchaseData = intent.getStringExtra("INAPP_PURCHASE_DATA");
-                const dataSignature = intent.getStringExtra("INAPP_DATA_SIGNATURE");
+                const responseCode = intent && intent.getIntExtra("RESPONSE_CODE", 0);
+                const purchaseData = intent && intent.getStringExtra("INAPP_PURCHASE_DATA");
+                const dataSignature = intent && intent.getStringExtra("INAPP_DATA_SIGNATURE");
                 let tran: Transaction;
                 
-                if (args.resultCode === android.app.Activity.RESULT_OK && responseCode === 0 && !types.isNullOrUndefined(purchaseData)) {
+                if (typeof(responseCode) !== "undefined" && args.resultCode === android.app.Activity.RESULT_OK && responseCode === 0 && !types.isNullOrUndefined(purchaseData)) {
                     const nativeValue = new org.json.JSONObject(purchaseData);
                     nativeValue.put("signature", dataSignature);
                     tran = new Transaction(nativeValue);
