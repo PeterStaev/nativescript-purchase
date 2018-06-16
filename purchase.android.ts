@@ -46,7 +46,7 @@ export function init(productIdentifiers: Array<string>): Promise<any> {
                 const dataSignature = intent && intent.getStringExtra("INAPP_DATA_SIGNATURE");
                 let tran: Transaction;
                 
-                if (typeof(responseCode)!=="undefined" && args.resultCode === android.app.Activity.RESULT_OK && responseCode === 0 && !types.isNullOrUndefined(purchaseData)) {
+                if (typeof(responseCode) !== "undefined" && args.resultCode === android.app.Activity.RESULT_OK && responseCode === 0 && !types.isNullOrUndefined(purchaseData)) {
                     const nativeValue = new org.json.JSONObject(purchaseData);
                     nativeValue.put("signature", dataSignature);
                     tran = new Transaction(nativeValue);
