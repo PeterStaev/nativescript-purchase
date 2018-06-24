@@ -25,7 +25,7 @@ export class Product extends ProductBase {
         this.productIdentifier = nativeValue.getString("productId");
         this.localizedDescription = nativeValue.getString("description");
         this.localizedTitle = nativeValue.getString("title");
-        this.priceAmount = nativeValue.getInt("price_amount_micros") / 1000000;
+        this.priceAmount = nativeValue.getLong("price_amount_micros") / 1000000;
         this.priceFormatted = nativeValue.getString("price");
         this.priceCurrencyCode = nativeValue.getString("price_currency_code");
         if (nativeValue.has("subscriptionPeriod")) {
