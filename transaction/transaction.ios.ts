@@ -22,7 +22,7 @@ export class Transaction extends TransactionBase {
     constructor(nativeValue: SKPaymentTransaction) {
         super(nativeValue);
 
-        if (nativeValue && nativeValue.transactionState) {
+        if (nativeValue.transactionState === null) {
             switch (nativeValue.transactionState) {
                 case SKPaymentTransactionState.Deferred:
                     this.transactionState = TransactionState.Deferred;
@@ -45,15 +45,15 @@ export class Transaction extends TransactionBase {
                     this.originalTransaction = new Transaction(nativeValue.originalTransaction);
                     break;
             }
+        }
 
-            this.productIdentifier = nativeValue.payment.productIdentifier;
-            this.transactionIdentifier = nativeValue.transactionIdentifier;
-            if (nativeValue.transactionDate) {
-                this.transactionDate = nativeValue.transactionDate as any; // NSDate will automatically be bridged to date
-            }
-            if (nativeValue.transactionReceipt) {
-                this.transactionReceipt = nativeValue.transactionReceipt.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength);
-            }
+        this.productIdentifier = nativeValue.payment.productIdentifier;
+        this.transactionIdentifier = nativeValue.transactionIdentifier;
+        if (nativeValue.transactionDate) {
+            this.transactionDate = nativeValue.transactionDate as any; // NSDate will automatically be bridged to date
+        }
+        if (nativeValue.transactionReceipt) {
+            this.transactionReceipt = nativeValue.transactionReceipt.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength);
         }
     }
 }
