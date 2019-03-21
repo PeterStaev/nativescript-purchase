@@ -21,37 +21,39 @@ export * from "./transaction-common";
 export class Transaction extends TransactionBase {
     constructor(nativeValue: SKPaymentTransaction) {
         super(nativeValue);
-        
-        switch (nativeValue.transactionState) {
-            case SKPaymentTransactionState.Deferred:
-                this.transactionState = TransactionState.Deferred;
-                break;
 
-            case SKPaymentTransactionState.Failed:
-                this.transactionState = TransactionState.Failed;
-                break;
-                
-            case SKPaymentTransactionState.Purchased:
-                this.transactionState = TransactionState.Purchased;
-                break;
-                
-            case SKPaymentTransactionState.Purchasing:
-                this.transactionState = TransactionState.Purchasing;
-                break;
-                
-            case SKPaymentTransactionState.Restored:
-                this.transactionState = TransactionState.Restored;
-                this.originalTransaction = new Transaction(nativeValue.originalTransaction);
-                break;
+        if (nativeValue && nativeValue.transactionState) {
+            switch (nativeValue.transactionState) {
+                case SKPaymentTransactionState.Deferred:
+                    this.transactionState = TransactionState.Deferred;
+                    break;
+
+                case SKPaymentTransactionState.Failed:
+                    this.transactionState = TransactionState.Failed;
+                    break;
+
+                case SKPaymentTransactionState.Purchased:
+                    this.transactionState = TransactionState.Purchased;
+                    break;
+
+                case SKPaymentTransactionState.Purchasing:
+                    this.transactionState = TransactionState.Purchasing;
+                    break;
+
+                case SKPaymentTransactionState.Restored:
+                    this.transactionState = TransactionState.Restored;
+                    this.originalTransaction = new Transaction(nativeValue.originalTransaction);
+                    break;
+            }
+
+            this.productIdentifier = nativeValue.payment.productIdentifier;
+            this.transactionIdentifier = nativeValue.transactionIdentifier;
+            if (nativeValue.transactionDate) {
+                this.transactionDate = nativeValue.transactionDate as any; // NSDate will automatically be bridged to date
+            }
+            if (nativeValue.transactionReceipt) {
+                this.transactionReceipt = nativeValue.transactionReceipt.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength);
+            }
         }
-
-        this.productIdentifier = nativeValue.payment.productIdentifier;
-        this.transactionIdentifier = nativeValue.transactionIdentifier;
-        if (nativeValue.transactionDate) {
-            this.transactionDate = nativeValue.transactionDate as any; // NSDate will automatically be bridged to date
-        }    
-        if (nativeValue.transactionReceipt) {
-            this.transactionReceipt = nativeValue.transactionReceipt.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength);
-        }    
     }
-} 
+}
