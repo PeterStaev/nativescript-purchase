@@ -47,7 +47,7 @@ export function init(productIdentifiers: Array<string>): Promise<any> {
                     const responseCode = intent.getIntExtra("RESPONSE_CODE", 0);
                     const purchaseData = intent.getStringExtra("INAPP_PURCHASE_DATA");
                     const dataSignature = intent.getStringExtra("INAPP_DATA_SIGNATURE");
-                
+
                     if (args.resultCode === android.app.Activity.RESULT_OK && responseCode === 0 && !types.isNullOrUndefined(purchaseData)) {
                         const nativeValue = new org.json.JSONObject(purchaseData);
                         nativeValue.put("signature", dataSignature);
@@ -60,14 +60,14 @@ export function init(productIdentifiers: Array<string>): Promise<any> {
                 else {
                     tran = getFailedTransaction();
                 }
-                
+
                 common._notify(common.transactionUpdatedEvent, tran);
             }
         });
     });
 }
 
-export function getProducts(): Promise<Array<Product>>{
+export function getProducts(): Promise<Array<Product>> {
     return new Promise<Array<Product>>((resolve, reject) => {
         Promise.all([
             futureToPromise(helper.getProducts("inapp")),
@@ -96,7 +96,7 @@ export function buyProduct(product: Product, developerPayload?: string) {
 
     currentBuyProductIdentifier = product.productIdentifier;
     currentBuyPayload = developerPayload;
-    
+
     helper.startBuyIntent(application.android.foregroundActivity,
         product.productIdentifier,
         product.productType,
@@ -122,11 +122,11 @@ export function restorePurchases() {
 
                 common._notify(common.transactionUpdatedEvent, tran);
             }
-        }    
+        }
     });
 }
 
-export function canMakePayments(): boolean{
+export function canMakePayments(): boolean {
     return true;
 }
 
@@ -141,14 +141,18 @@ function getFailedTransaction() {
 
 function futureToPromise(future: any /* ListenableFuture */): Promise<any> {
     return new Promise((resolve, reject) => {
-        com.google.common.util.concurrent.Futures.addCallback(future, new com.google.common.util.concurrent.FutureCallback({
-            onSuccess: (result) => {
-                resolve(result);
-            }
-            , onFailure: (t /* Throwable */) => {
-                reject(new Error(t.getMessage()));
-            }
-        }));
+        com.google.common.util.concurrent.Futures.addCallback(
+            future,
+            new com.google.common.util.concurrent.FutureCallback({
+                onSuccess: (result) => {
+                    resolve(result);
+                }
+                , onFailure: (t /* Throwable */) => {
+                    reject(new Error(t.getMessage()));
+                }
+            }),
+            com.google.common.util.concurrent.MoreExecutors.directExecutor(),
+        );
     });
 }
 
@@ -161,6 +165,6 @@ function ensureApplicationContext(): Promise<any> {
 
         application.on(application.launchEvent, (args: application.LaunchEventData) => {
             resolve();
-        });        
+        });
     });
 }
