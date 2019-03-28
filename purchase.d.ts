@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ***************************************************************************** */
 
-declare module "nativescript-purchase" { 
+declare module "nativescript-purchase" {
     import { Product } from "nativescript-purchase/product";
     import { Transaction } from "nativescript-purchase/transaction";
 
@@ -24,10 +24,10 @@ declare module "nativescript-purchase" {
     export function getProducts(): Promise<Array<Product>>;
     export function buyProduct(product: Product, developerPayload?: string);
     export function consumePurchase(token: string): Promise<number>;
-    export function restorePurchases();
+    export function restorePurchases(): void | Promise<void>;
     export function canMakePayments(): boolean;
     export function getStoreReceipt(): string;
-    
+
     export function on(eventName: string, handler: (data: any) => void);
     export function on(eventName: "transactionUpdated", handler: (data: Transaction) => void);
 
