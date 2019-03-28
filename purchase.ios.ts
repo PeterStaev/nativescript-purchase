@@ -64,8 +64,9 @@ export function consumePurchase(token: string): Promise<number> {
     });
 }
 
-export function restorePurchases() {
+export function restorePurchases(): Promise<void> {
     SKPaymentQueue.defaultQueue().restoreCompletedTransactions();
+    return Promise.resolve();
 }
 
 export function canMakePayments(): boolean {

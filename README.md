@@ -43,8 +43,8 @@ Buys the given product. On Android you can send custom string data that will be 
 * **consumePurchase(string): Promise<number>**  
 Consumes the purchases represented by the given transaction token. If the promise returns `0` the consume was successful. Note that this is needed only for Android. For iOS each purchase is automatically consumed when it is set up as a consumabel product in iTunes. 
 
-* **restorePurchases(): void | Promise<void>**  
-Restores previous purchased items for the current user. On Android, returns a promise for when the purchases have been restored. On iOS, returns undefined.
+* **restorePurchases(): Promise<void>**
+Restores previous purchased items for the current user. On Android, returns a promise for when the purchases have been restored. On iOS, returns a completed promise (as you can use getStoreReceipt to get the receipt instantly anytime).
 
 * **getStoreReceipt(): string**  
 Gets the application's Base64 encoded store receipt for the currently logged in store user. This is useful when checking subscription status under iOS. For Android the function always returns `undefined`.

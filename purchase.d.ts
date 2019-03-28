@@ -24,7 +24,7 @@ declare module "nativescript-purchase" {
     export function getProducts(): Promise<Array<Product>>;
     export function buyProduct(product: Product, developerPayload?: string);
     export function consumePurchase(token: string): Promise<number>;
-    export function restorePurchases(): void | Promise<void>;
+    export function restorePurchases(): Promise<void>;
     export function canMakePayments(): boolean;
     export function getStoreReceipt(): string;
 
