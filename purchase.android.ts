@@ -109,10 +109,10 @@ export function consumePurchase(token: string): Promise<number> {
     });
 }
 
-export function restorePurchases() {
+export function restorePurchases(): Promise<void> {
     return Promise.all([
         futureToPromise(helper.getPurchases(null, "inapp")),
-        futureToPromise(helper.getPurchases(null, "subs")),
+        futureToPromise(helper.getPurchases(null, "subs"))
     ]).then((result: Array<Array<org.json.JSONObject>>) => {
         for (let type = 0; type <= 1; type++) {
             for (const item of result[type]) {
