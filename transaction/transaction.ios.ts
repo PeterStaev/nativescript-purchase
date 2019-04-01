@@ -22,7 +22,7 @@ export class Transaction extends TransactionBase {
     constructor(nativeValue: SKPaymentTransaction) {
         super(nativeValue);
 
-        if (nativeValue.transactionState === null) {
+        if (nativeValue.transactionState !== null) {
             switch (nativeValue.transactionState) {
                 case SKPaymentTransactionState.Deferred:
                     this.transactionState = TransactionState.Deferred;
