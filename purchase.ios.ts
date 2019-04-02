@@ -30,7 +30,7 @@ export function init(productIdentifiers: Array<string>): Promise<any> {
     return new Promise((resolve, reject) => {
         productIds = NSMutableSet.alloc<string>().init();
         paymentTransactionObserver = new SKPaymentTransactionObserverImpl();
-        
+
         productIdentifiers.forEach((value) => productIds.addObject(value));
 
         SKPaymentQueue.defaultQueue().addTransactionObserver(paymentTransactionObserver);
@@ -88,7 +88,7 @@ export function getStoreReceipt(): string {
 class SKProductRequestDelegateImpl extends NSObject implements SKProductsRequestDelegate {
     private _resolve: Function;
     private _reject: Function;
-    
+
     public static initWithResolveReject(resolve: Function, reject: Function): SKProductRequestDelegateImpl {
         const delegate: SKProductRequestDelegateImpl = SKProductRequestDelegateImpl.new() as SKProductRequestDelegateImpl;
         delegate._resolve = resolve;
@@ -108,7 +108,7 @@ class SKProductRequestDelegateImpl extends NSObject implements SKProductsRequest
         this._resolve(result);
         this._cleanup();
     }
-    
+
     public requestDidFailWithError(request: SKRequest, error: NSError) {
         this._reject(new Error(error.localizedDescription));
         this._cleanup();
@@ -125,18 +125,22 @@ class SKPaymentTransactionObserverImpl extends NSObject implements SKPaymentTran
     public paymentQueueUpdatedTransactions(queue: SKPaymentQueue, transactions: NSArray<SKPaymentTransaction>) {
         for (let loop = 0; loop < transactions.count; loop++) {
             const transaction = transactions.objectAtIndex(loop);
-            const resultTransaction = new Transaction(transaction);
+            let resultTransaction: Transaction = null;
 
-            resultTransaction.developerPayload = storedDeveloperPayload;
+            if (transaction) {
+                resultTransaction = new Transaction(transaction);
+                resultTransaction.developerPayload = storedDeveloperPayload;
+            }
 
             common._notify(common.transactionUpdatedEvent, resultTransaction);
 
-            if (transaction.transactionState === SKPaymentTransactionState.Failed
-                || transaction.transactionState === SKPaymentTransactionState.Purchased
-                || transaction.transactionState === SKPaymentTransactionState.Restored) {
+            if (transaction
+                && (transaction.transactionState === SKPaymentTransactionState.Failed
+                    || transaction.transactionState === SKPaymentTransactionState.Purchased
+                    || transaction.transactionState === SKPaymentTransactionState.Restored)) {
                 SKPaymentQueue.defaultQueue().finishTransaction(transaction);
                 storedDeveloperPayload = undefined;
-            }           
+            }
         }
     }
 }
