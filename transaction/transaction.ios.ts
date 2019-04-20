@@ -47,7 +47,9 @@ export class Transaction extends TransactionBase {
             }
         }
 
-        this.productIdentifier = nativeValue.payment.productIdentifier;
+        if (nativeValue.payment) {
+            this.productIdentifier = nativeValue.payment.productIdentifier;
+        }
         this.transactionIdentifier = nativeValue.transactionIdentifier;
         if (nativeValue.transactionDate) {
             this.transactionDate = nativeValue.transactionDate as any; // NSDate will automatically be bridged to date
