@@ -42,7 +42,9 @@ export class Transaction extends TransactionBase {
 
                 case SKPaymentTransactionState.Restored:
                     this.transactionState = TransactionState.Restored;
-                    this.originalTransaction = new Transaction(nativeValue.originalTransaction);
+                    if (nativeValue.originalTransaction) {
+                        this.originalTransaction = new Transaction(nativeValue.originalTransaction);
+                    }
                     break;
             }
         }
