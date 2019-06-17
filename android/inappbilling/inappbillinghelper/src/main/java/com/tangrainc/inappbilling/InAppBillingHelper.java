@@ -85,25 +85,31 @@ public class InAppBillingHelper {
                     throw new Exception("Billing service could not be connected for 10 secs! May be running on an emulator w/o Google Service?");
                 }
 
-                Bundle queryProducts = new Bundle();
-                queryProducts.putStringArrayList("ITEM_ID_LIST", new ArrayList< >(Arrays.asList(_productIdentifiers)));
+                ArrayList<String> productIdentifiers = new ArrayList<>(Arrays.asList(_productIdentifiers));
+                ArrayList<JSONObject> result = new ArrayList<>();
+                // Process 20 items at a time
+                while (productIdentifiers.size() > 0) {
+                    ArrayList<String> productIdSubList = new ArrayList<>(productIdentifiers.subList(0, Math.min(20, productIdentifiers.size())));
+                    productIdentifiers.removeAll(productIdSubList);
 
-                Bundle productDetails = _service.getSkuDetails(3, _context.getPackageName(), type, queryProducts);
-                ArrayList<JSONObject> result = new ArrayList< >();
+                    Bundle queryProducts = new Bundle();
+                    queryProducts.putStringArrayList("ITEM_ID_LIST", productIdSubList);
 
-                int response = productDetails.getInt("RESPONSE_CODE");
-                if (response == 0) {
-                    ArrayList<String> responseList = productDetails.getStringArrayList("DETAILS_LIST");
+                    Bundle productDetails = _service.getSkuDetails(3, _context.getPackageName(), type, queryProducts);
 
-                    for (String thisResponse : responseList) {
-                        result.add(new JSONObject(thisResponse));
+                    int response = productDetails.getInt("RESPONSE_CODE");
+                    if (response == 0) {
+                        ArrayList<String> responseList = productDetails.getStringArrayList("DETAILS_LIST");
+
+                        for (String thisResponse : responseList) {
+                            result.add(new JSONObject(thisResponse));
+                        }
+
+                    } else {
+                        throw new Exception("Response from service: " + response);
                     }
-
-                    return result.toArray(new JSONObject[0]);
                 }
-                else {
-                    throw new Exception("Response from service: " + response);
-                }
+                return result.toArray(new JSONObject[0]);
             }
         });
     }
