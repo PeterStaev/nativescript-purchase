@@ -1,6 +1,6 @@
 {
   "name": "nativescript-purchase",
-  "version": "2.0.12",
+  "version": "2.0.13",
   "description": "A NativeScript plugin for making in-app purchases",
   "main": "purchase",
   "typings": "nativescript-purchase.d.ts",
