@@ -1,3 +1,4 @@
+**This repo only supports NativeScript pre-6.0. The latest version of the plugin supporting NS 6+ is availble as part of [ProPlugins](https://proplugins.org).**
 # NativeScript In-App Purchases plugin
 [![Build Status](https://travis-ci.org/PeterStaev/nativescript-purchase.svg?branch=master)](https://travis-ci.org/PeterStaev/nativescript-purchase)
 [![npm downloads](https://img.shields.io/npm/dm/nativescript-purchase.svg)](https://www.npmjs.com/package/nativescript-purchase)
