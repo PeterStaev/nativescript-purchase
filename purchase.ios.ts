@@ -25,6 +25,8 @@ let productIds: NSMutableSet<string>;
 let productRequestDelegate: SKProductRequestDelegateImpl;
 let paymentTransactionObserver: SKPaymentTransactionObserverImpl;
 let storedDeveloperPayload: string;
+let refreshReceiptRequest: SKReceiptRefreshRequest;
+let refreshReceiptRequestDelegate: SKReceiptRefreshRequestDelegateImpl;
 
 export function init(productIdentifiers: Array<string>): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -81,6 +83,45 @@ export function getStoreReceipt(): string {
     }
     else {
         return null;
+    }
+}
+
+export function refreshStoreReceipt(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+        refreshReceiptRequest = SKReceiptRefreshRequest.alloc().init();
+        refreshReceiptRequestDelegate = SKReceiptRefreshRequestDelegateImpl.initWithResolveReject(resolve, reject);
+        refreshReceiptRequest.delegate = refreshReceiptRequestDelegate;
+        refreshReceiptRequest.start();
+    });
+}
+
+
+@ObjCClass(SKRequestDelegate)
+class SKReceiptRefreshRequestDelegateImpl extends NSObject implements SKRequestDelegate {
+    private _resolve: Function;
+    private _reject: Function;
+
+    public static initWithResolveReject(resolve: Function, reject: Function): SKReceiptRefreshRequestDelegateImpl {
+        const delegate: SKReceiptRefreshRequestDelegateImpl = SKReceiptRefreshRequestDelegateImpl.new() as SKReceiptRefreshRequestDelegateImpl;
+        delegate._resolve = resolve;
+        delegate._reject = reject;
+
+        return delegate;
+    }
+
+    public requestDidFinish(request: SKRequest) {
+        this._resolve();
+        this._cleanup();
+    }
+
+    public requestDidFailWithError(request: SKRequest, error: NSError) {
+        this._reject(new Error(error.localizedDescription));
+        this._cleanup();
+    }
+
+    private _cleanup() {
+        refreshReceiptRequestDelegate = null;
+        refreshReceiptRequest = null;
     }
 }
 

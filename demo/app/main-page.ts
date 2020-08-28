@@ -16,11 +16,11 @@ export function pageLoaded(args: observable.EventData) {
 
     purchase.on(purchase.transactionUpdatedEvent, (transaction: Transaction) => {
         console.log(JSON.stringify(transaction));
-        
+
         if (transaction.transactionState === TransactionState.Restored) {
             console.log(transaction.originalTransaction.transactionDate);
         }
-        if (transaction.transactionState === TransactionState.Purchased && transaction.productIdentifier.indexOf(".consume") >= 0) {
+        else if (transaction.transactionState === TransactionState.Purchased && transaction.productIdentifier.indexOf(".consume") >= 0) {
             purchase.consumePurchase(transaction.transactionReceipt)
                 .then((responseCode) => console.log(responseCode))
                 .catch((e) => console.log(e));
@@ -32,7 +32,7 @@ export function pageLoaded(args: observable.EventData) {
             viewModel.set("items", res);
         })
         .catch((e) => alert(e));
-        
+
     page.bindingContext = viewModel;
 }
 
@@ -44,4 +44,8 @@ export function onProductTap(data: ItemEventData) {
 
 export function onRestoreTap() {
     purchase.restorePurchases();
+}
+
+export function onRefreshTap() {
+    purchase.refreshStoreReceipt();
 }

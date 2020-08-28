@@ -130,6 +130,14 @@ export function canMakePayments(): boolean {
     return true;
 }
 
+export function getStoreReceipt(): string {
+    return null;
+}
+
+export function refreshStoreReceipt(): Promise<void> {
+	return Promise.resolve();
+}
+
 function getFailedTransaction() {
     const tran = new Transaction(null);
     tran.transactionState = TransactionState.Failed;
