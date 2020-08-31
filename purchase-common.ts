@@ -44,12 +44,16 @@ export function off(eventName: string, handler?: (data: any) => void) {
         return;
     }
 
-    let index = observers[eventName].indexOf(handler); 
+    let index = observers[eventName].indexOf(handler);
     if (index !== -1) {
         observers[eventName].splice(index, 1);
-    }    
+    }
 }
 
 export function getStoreReceipt(): string {
     return undefined;
+}
+
+export function finishTransaction(): Promise<void> {
+    return Promise.resolve();
 }

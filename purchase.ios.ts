@@ -84,6 +84,16 @@ export function getStoreReceipt(): string {
     }
 }
 
+export function finishTransaction(transaction: SKPaymentTransaction): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+        if (!transaction) {
+            return reject("No transaction provided to finish");
+        }
+        SKPaymentQueue.defaultQueue().finishTransaction(transaction);
+        resolve();
+    });
+}
+
 @ObjCClass(SKProductsRequestDelegate)
 class SKProductRequestDelegateImpl extends NSObject implements SKProductsRequestDelegate {
     private _resolve: Function;
