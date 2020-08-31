@@ -84,12 +84,12 @@ export function getStoreReceipt(): string {
     }
 }
 
-export function finishTransaction(transaction: SKPaymentTransaction): Promise<void> {
+export function finishTransaction(transaction: Transaction): Promise<void> {
     return new Promise<void>((resolve, reject) => {
         if (!transaction) {
             return reject("No transaction provided to finish");
         }
-        SKPaymentQueue.defaultQueue().finishTransaction(transaction);
+        SKPaymentQueue.defaultQueue().finishTransaction(transaction.nativeValue);
         resolve();
     });
 }
