@@ -135,7 +135,7 @@ export function getStoreReceipt(): string {
 }
 
 export function refreshStoreReceipt(): Promise<void> {
-	return Promise.resolve();
+    return Promise.resolve();
 }
 
 function getFailedTransaction() {
