@@ -50,6 +50,9 @@ Restores previous purchased items for the current user. On Android, returns a pr
 * **getStoreReceipt(): string**  
 Gets the application's Base64 encoded store receipt for the currently logged in store user. This is useful when checking subscription status under iOS. For Android the function always returns `undefined`.
 
+* **refreshStoreReceipt(): Promise<void>**
+Refreshes the store receipt for the currently logged in store user. This is useful when a transaction is invalid or missing.  On iOS, returns a completed promise once the refresh is complete.
+
 ### Events
 * **transactionUpdated**  
 Triggered a buy/restore transaction changes its state. You receive a `Transaction` object where you can check the status and other properties  *(see below)* of the transaction. 

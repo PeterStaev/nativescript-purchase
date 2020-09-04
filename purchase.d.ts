@@ -27,6 +27,7 @@ declare module "nativescript-purchase" {
     export function restorePurchases(): Promise<void>;
     export function canMakePayments(): boolean;
     export function getStoreReceipt(): string;
+    export function refreshStoreReceipt(): Promise<void>;
 
     export function on(eventName: string, handler: (data: any) => void);
     export function on(eventName: "transactionUpdated", handler: (data: Transaction) => void);

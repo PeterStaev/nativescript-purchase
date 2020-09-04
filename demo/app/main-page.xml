@@ -1,10 +1,11 @@
 <Page xmlns="http://schemas.nativescript.org/tns.xsd" loaded="pageLoaded">
     <ActionBar title="In-App Purchase Demo">
         <ActionBar.items>
+            <ActionItem text="Refresh" tap="onRefreshTap"/>
             <ActionItem ios.position="right" text="Restore" tap="onRestoreTap"/>
         </ActionBar.items>
     </ActionBar>
-    
+
     <ListView items="{{ items }}" itemTap="onProductTap">
         <ListView.itemTemplate>
             <GridLayout rows="auto, auto" columns="*, auto" padding="5">
